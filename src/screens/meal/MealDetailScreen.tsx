@@ -10,9 +10,9 @@ import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useMeals } from '@hooks/useMeals';
 import { usePairing } from '@hooks/usePairing';
 import { UI_CONSTANTS } from '@utils/constants';
-import type { MealStackScreenProps } from '@navigation/types';
-import type { Meal } from '@types/meal';
-import type { PairingRecommendation } from '@types/pairing';
+import type { MealStackScreenProps } from '../../navigation/types';
+import type { Meal } from '../../types/meal';
+import type { PairingRecommendation } from '../../types/pairing';
 
 type MealDetailScreenProps = MealStackScreenProps<'MealDetail'>;
 

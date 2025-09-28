@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { favoritesService } from '@services/storage/FavoritesService';
-import type { SavedPairing } from '@types/pairing';
+import type { SavedPairing } from '../types/pairing';
 import type { CreatePairingData } from '@services/storage/FavoritesService';
 
 export const useFavorites = () => {

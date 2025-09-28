@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Colors } from 'react-native-ui-lib';
+import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '@screens/main/HomeScreen';
 import { FavoritesScreen } from '@screens/main/FavoritesScreen';
 import { ProfileScreen } from '@screens/main/ProfileScreen';
-import { Colors, TabController } from 'react-native-ui-lib';
 import type { MainTabParamList } from './types';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -13,19 +14,15 @@ export const MainTabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.grey30,
         tabBarStyle: {
           backgroundColor: Colors.white,
           borderTopWidth: 1,
-          borderTopColor: Colors.grey60,
-          height: 80,
-          paddingBottom: 10,
-          paddingTop: 10,
-        },
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.grey40,
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
+          borderTopColor: Colors.grey70,
+          paddingBottom: 8,
+          paddingTop: 8,
+          height: 60,
         },
       }}
     >
@@ -34,37 +31,41 @@ export const MainTabNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            // We'll use icons from react-native-ui-lib or expo/vector-icons later
-            <TabController.TabBarItem 
-              label="Home"
-              selectedColor={color}
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons 
+              name={focused ? 'home' : 'home-outline'} 
+              size={size} 
+              color={color} 
             />
           ),
         }}
       />
+      
       <Tab.Screen 
         name="Favorites" 
         component={FavoritesScreen}
         options={{
           tabBarLabel: 'Favorites',
-          tabBarIcon: ({ color, size }) => (
-            <TabController.TabBarItem 
-              label="Favorites"
-              selectedColor={color}
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons 
+              name={focused ? 'heart' : 'heart-outline'} 
+              size={size} 
+              color={color} 
             />
           ),
         }}
       />
+      
       <Tab.Screen 
         name="Profile" 
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <TabController.TabBarItem 
-              label="Profile"
-              selectedColor={color}
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons 
+              name={focused ? 'person' : 'person-outline'} 
+              size={size} 
+              color={color} 
             />
           ),
         }}

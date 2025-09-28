@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { API_ENDPOINTS } from '@utils/constants';
-import type { ApiResponse } from '@types';
+import { API_ENDPOINTS } from '../../utils/constants';
+import type { ApiResponse } from '../../types';
 
 // MealDB API Response Types
 export interface MealDBMeal {
@@ -53,7 +53,6 @@ export interface MealDBMeal {
   strMeasure18?: string;
   strMeasure19?: string;
   strMeasure20?: string;
-
   strSource?: string;
   strImageSource?: string;
   strCreativeCommonsConfirmed?: string;
@@ -96,7 +95,7 @@ class MealDBService {
         };
       }
 
-      const meals = response.data.meals.map(this.processMeal);
+      const meals = response.data.meals.map(meal => this.processMeal(meal));
       return {
         data: meals,
         status: 'success'
@@ -122,7 +121,15 @@ class MealDBService {
         };
       }
 
-      const meal = this.processMeal(response.data.meals[0]);
+      const mealData = response.data.meals[0];
+      if (!mealData) {
+        return {
+          data: null,
+          status: 'success'
+        };
+      }
+
+      const meal = this.processMeal(mealData);
       return {
         data: meal,
         status: 'success'
@@ -148,7 +155,15 @@ class MealDBService {
         };
       }
 
-      const meal = this.processMeal(response.data.meals[0]);
+      const mealData = response.data.meals[0];
+      if (!mealData) {
+        return {
+          data: null,
+          status: 'success'
+        };
+      }
+
+      const meal = this.processMeal(mealData);
       return {
         data: meal,
         status: 'success'
@@ -175,10 +190,10 @@ class MealDBService {
       }
 
       // Note: filter endpoint returns limited data, so we need to fetch full details for each meal
-      const mealPromises = response.data.meals.slice(0, 10).map(meal => 
+      const mealPromises = response.data.meals.slice(0, 10).map(meal =>
         this.getMealById(meal.idMeal)
       );
-      
+
       const mealResults = await Promise.all(mealPromises);
       const meals = mealResults
         .filter(result => result.data !== null)
@@ -197,12 +212,35 @@ class MealDBService {
     }
   }
 
+  // Get multiple random meals (for featured meals)
+  async getRandomMeals(count: number = 5): Promise<ApiResponse<Meal[]>> {
+    try {
+      const randomPromises = Array.from({ length: count }, () => this.getRandomMeal());
+      const randomResults = await Promise.all(randomPromises);
+      
+      const meals = randomResults
+        .filter(result => result.data !== null)
+        .map(result => result.data as Meal);
+
+      return {
+        data: meals,
+        status: 'success'
+      };
+    } catch (error) {
+      return {
+        data: [],
+        error: 'Failed to fetch random meals',
+        status: 'error'
+      };
+    }
+  }
+
   // Get all available cuisines
   async getAllCuisines(): Promise<ApiResponse<string[]>> {
     try {
       const response = await axios.get(`${this.baseURL}/list.php?a=list`);
-      
       const cuisines = response.data.meals?.map((item: any) => item.strArea) || [];
+      
       return {
         data: cuisines,
         status: 'success'
@@ -242,9 +280,9 @@ class MealDBService {
       image: mealData.strMealThumb,
       tags: mealData.strTags ? mealData.strTags.split(',').map(tag => tag.trim()) : [],
       ingredients,
-      youtubeUrl: mealData.strYoutube,
-      sourceUrl: mealData.strSource,
-    };
+      youtubeUrl: mealData.strYoutube || undefined,
+      sourceUrl: mealData.strSource || undefined,
+    } as Meal;
   }
 }
 

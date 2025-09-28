@@ -1,6 +1,9 @@
-// Re-export all types for easy importing
+// src/types/index.ts
 export * from './auth';
 export * from './navigation';
+export * from './meal';
+export * from './pairing';
+export * from './spotify';
 
 // Common utility types
 export interface ApiResponse<T> {

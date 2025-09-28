@@ -4,40 +4,35 @@
     "slug": "food-n-jam",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#1DB954"
-    },
-    "scheme": "foodnjam",
-    "assetBundlePatterns": [
-      "**/*"
+    "platforms": [
+      "ios",
+      "android",
+      "web"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.foodnjam",
+      "bundleIdentifier": "com.patricknelwan.foodnjam",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["spotify"]
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1DB954"
-      },
-      "package": "com.yourcompany.foodnjam",
-      "permissions": [
-        "android.permission.INTERNET",
-        "android.permission.ACCESS_NETWORK_STATE"
-      ]
+        "backgroundColor": "#6366f1"
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro"
     },
     "plugins": [
-      "expo-secure-store"
-    ]
+      "expo-asset",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1d48e2e6-7888-4299-a521-d568c946cab1"
+      }
+    }
   }
 }

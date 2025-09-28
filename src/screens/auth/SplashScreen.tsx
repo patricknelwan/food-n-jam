@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import type { AuthStackScreenProps } from '@navigation/types';
+import type { AuthStackScreenProps } from '../../navigation/types';
 import { APP_CONFIG } from '@utils/constants';
 
 type SplashScreenProps = AuthStackScreenProps<'Splash'>;

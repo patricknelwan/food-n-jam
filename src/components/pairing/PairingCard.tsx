@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { AppButton } from '@components/common/AppButton';
 import { SharePairingModal } from './SharePairingModal';
-import type { SavedPairing } from '@types/pairing';
+import type { SavedPairing } from '../../types/pairing';
 import { UI_CONSTANTS } from '@utils/constants';
 
 interface PairingCardProps {

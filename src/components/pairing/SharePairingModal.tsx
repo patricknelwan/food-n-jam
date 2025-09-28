@@ -4,7 +4,7 @@ import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton } from '@components/common/AppButton';
 import { shareHelper } from '@utils/sharing/shareHelper';
-import type { SavedPairing } from '@types/pairing';
+import type { SavedPairing } from '../../types/pairing';
 import { UI_CONSTANTS } from '@utils/constants';
 
 interface SharePairingModalProps {
@@ -104,26 +104,34 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
           {/* Share Options */}
           <View style={styles.shareOptions}>
             <Text style={styles.sectionTitle}>Share Options</Text>
-            
+
             <View style={styles.shareButtons}>
-              <AppButton
-                label="📱 Share to Apps"
-                subtitle="Share via your favorite apps"
-                onPress={() => handleShare()}
-                disabled={isSharing}
-                size="large"
-                style={styles.shareButton}
-              />
-              
-              <AppButton
-                label="✏️ Custom Message"
-                subtitle="Share with a personal touch"
-                onPress={handleCustomShare}
-                disabled={isSharing}
-                variant="outline"
-                size="large"
-                style={styles.shareButton}
-              />
+              <View style={styles.shareButtonContainer}>
+                <AppButton
+                  label="📱 Share to Apps"
+                  onPress={() => handleShare()}
+                  disabled={isSharing}
+                  size="large"
+                  style={styles.shareButton}
+                />
+                <Text style={styles.shareButtonDescription}>
+                  Share via your favorite apps
+                </Text>
+              </View>
+
+              <View style={styles.shareButtonContainer}>
+                <AppButton
+                  label="✏️ Custom Message"
+                  onPress={handleCustomShare}
+                  disabled={isSharing}
+                  variant="outline"
+                  size="large"
+                  style={styles.shareButton}
+                />
+                <Text style={styles.shareButtonDescription}>
+                  Share with a personal touch
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -278,4 +286,26 @@ const styles = StyleSheet.create({
     color: Colors.grey20,
     lineHeight: 20,
   },
+
+  shareButtonContainer: {
+  alignItems: 'center',
+  gap: UI_CONSTANTS.SPACING.xs,
+},
+
+shareButtonDescription: {
+  ...Typography.text80,
+  color: Colors.grey30,
+  textAlign: 'center',
+},
+
+shareDescriptions: {
+  marginTop: UI_CONSTANTS.SPACING.sm,
+  alignItems: 'center',
+},
+
+shareDescription: {
+  ...Typography.text80,
+  color: Colors.grey30,
+  textAlign: 'center',
+},
 });

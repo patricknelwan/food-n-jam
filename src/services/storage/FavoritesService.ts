@@ -1,6 +1,6 @@
 import { supabase } from '@services/api/supabase';
-import type { SavedPairing } from '@types/pairing';
-import type { ApiResponse } from '@types';
+import type { SavedPairing } from '../../types/pairing';
+import type { ApiResponse } from '../../types';
 
 export interface CreatePairingData {
   meal_name: string;
@@ -9,7 +9,7 @@ export interface CreatePairingData {
   playlist_name: string;
   meal_id?: string;
   meal_image?: string;
-  playlist_image?: string;
+  playlist_image?: string | undefined;
 }
 
 class FavoritesService {

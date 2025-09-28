@@ -7,7 +7,7 @@ import { AppCard } from '@components/common/AppCard';
 import { useAuth } from '@hooks/useAuth';
 import { useFavorites } from '@hooks/useFavorites';
 import { UI_CONSTANTS, APP_CONFIG } from '@utils/constants';
-import type { MainTabScreenProps } from '@navigation/types';
+import type { MainTabScreenProps } from '../../navigation/types';
 
 type ProfileScreenProps = MainTabScreenProps<'Profile'>;
 

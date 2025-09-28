@@ -8,7 +8,7 @@ import { EmptyState } from '@components/common/EmptyState';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useSpotify } from '@hooks/useSpotify';
 import { UI_CONSTANTS } from '@utils/constants';
-import type { PlaylistStackScreenProps } from '@navigation/types';
+import type { PlaylistStackScreenProps } from '../../navigation/types';
 
 type PlaylistListScreenProps = PlaylistStackScreenProps<'PlaylistList'>;
 

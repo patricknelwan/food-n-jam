@@ -4,7 +4,7 @@ import { View } from 'react-native-ui-lib';
 import { AppButton } from '@components/common/AppButton';
 import { shareHelper } from '@utils/sharing/shareHelper';
 import { useFavorites } from '@hooks/useFavorites';
-import type { PairingRecommendation } from '@types/pairing';
+import type { PairingRecommendation } from '../../types/pairing';
 import type { CreatePairingData } from '@services/storage/FavoritesService';
 import { UI_CONSTANTS } from '@utils/constants';
 

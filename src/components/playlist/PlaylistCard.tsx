@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
-import type { SpotifyPlaylist } from '@types/spotify';
+import type { SpotifyPlaylist } from '../../types/spotify';
 import { UI_CONSTANTS } from '@utils/constants';
 
 interface PlaylistCardProps {

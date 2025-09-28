@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { pairingLogic } from '@utils/pairing/pairingLogic';
-import type { Meal } from '@types/meal';
-import type { PairingRecommendation } from '@types/pairing';
+import type { Meal } from '../types/meal';
+import type { PairingRecommendation } from '../types/pairing';
 
 export const usePairing = () => {
   const [isLoading, setIsLoading] = useState(false);

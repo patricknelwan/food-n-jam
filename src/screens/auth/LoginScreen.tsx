@@ -4,7 +4,7 @@ import { View, Text, Button, Colors, Typography } from 'react-native-ui-lib';
 import { useAuth } from '@hooks/useAuth';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { APP_CONFIG } from '@utils/constants';
-import type { AuthStackScreenProps } from '@navigation/types';
+import type { AuthStackScreenProps } from '../../navigation/types';
 
 type LoginScreenProps = AuthStackScreenProps<'Login'>;
 

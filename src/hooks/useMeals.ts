@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { mealDBService } from '@services/api/mealdb';
-import type { Meal, MealSearchState } from '@types/meal';
+import type { Meal, MealSearchState } from '../types/meal';
 
 export const useMeals = () => {
   const [searchState, setSearchState] = useState<MealSearchState>({

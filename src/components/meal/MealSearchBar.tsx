@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { View, Colors, Typography } from 'react-native-ui-lib';
+import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { UI_CONSTANTS } from '@utils/constants';
 
 interface MealSearchBarProps {

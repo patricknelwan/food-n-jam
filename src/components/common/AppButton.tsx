@@ -1,10 +1,12 @@
 import React from 'react';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { Button, Colors, ButtonProps } from 'react-native-ui-lib';
 import { UI_CONSTANTS } from '@utils/constants';
 
-interface AppButtonProps extends ButtonProps {
+interface AppButtonProps extends Omit<ButtonProps, 'style'> {
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'small' | 'medium' | 'large';
+  style?: ViewStyle | ViewStyle[];
 }
 
 export const AppButton: React.FC<AppButtonProps> = ({
@@ -41,7 +43,12 @@ export const AppButton: React.FC<AppButtonProps> = ({
       },
     };
 
-    return [baseStyle, sizeStyles[size], variantStyles[variant], style];
+    return StyleSheet.flatten([
+      baseStyle, 
+      sizeStyles[size], 
+      variantStyles[variant], 
+      style
+    ]);
   };
 
   return (

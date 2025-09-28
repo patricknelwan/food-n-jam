@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { authService } from '@services/auth/AuthService';
 import { API_ENDPOINTS } from '@utils/constants';
-import type { SpotifyTokens, ApiResponse } from '@types';
+import type { SpotifyTokens, ApiResponse } from '../../types';
 
 // Spotify API Response Types
 export interface SpotifyUser {

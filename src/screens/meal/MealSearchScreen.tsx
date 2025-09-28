@@ -9,7 +9,7 @@ import { EmptyState } from '@components/common/EmptyState';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useMeals } from '@hooks/useMeals';
 import { UI_CONSTANTS } from '@utils/constants';
-import type { MealStackScreenProps } from '@navigation/types';
+import type { MealStackScreenProps } from '../../navigation/types';
 
 type MealSearchScreenProps = MealStackScreenProps<'MealSearch'>;
 

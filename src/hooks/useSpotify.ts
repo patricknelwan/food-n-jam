@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { spotifyService } from '@services/api/spotify';
-import type { SpotifyPlaylist } from '@types/spotify';
+import type { SpotifyPlaylist } from '../types/spotify';
 
 export const useSpotify = () => {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);

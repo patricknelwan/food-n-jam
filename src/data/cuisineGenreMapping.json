@@ -1,0 +1,147 @@
+{
+  "American": {
+    "genre": "Rock / Pop",
+    "playlist": "American Classics",
+    "spotifyGenre": "rock"
+  },
+  "British": {
+    "genre": "Pop / Indie",
+    "playlist": "British Invasion",
+    "spotifyGenre": "indie"
+  },
+  "Canadian": {
+    "genre": "Indie / Folk",
+    "playlist": "Canadian Indie",
+    "spotifyGenre": "indie"
+  },
+  "Chinese": {
+    "genre": "Lo-Fi / Jazz",
+    "playlist": "Lo-Fi Beats",
+    "spotifyGenre": "chill"
+  },
+  "Croatian": {
+    "genre": "Folk / World",
+    "playlist": "European Folk",
+    "spotifyGenre": "world-music"
+  },
+  "Dutch": {
+    "genre": "Electronic / House",
+    "playlist": "Dutch Electronic",
+    "spotifyGenre": "house"
+  },
+  "Egyptian": {
+    "genre": "World / Traditional",
+    "playlist": "Middle Eastern Vibes",
+    "spotifyGenre": "world-music"
+  },
+  "Filipino": {
+    "genre": "Pop / Reggae",
+    "playlist": "Island Vibes",
+    "spotifyGenre": "reggae"
+  },
+  "French": {
+    "genre": "Jazz / Chanson",
+    "playlist": "French Café",
+    "spotifyGenre": "jazz"
+  },
+  "Greek": {
+    "genre": "Folk / Mediterranean",
+    "playlist": "Mediterranean Nights",
+    "spotifyGenre": "world-music"
+  },
+  "Indian": {
+    "genre": "World / Bollywood",
+    "playlist": "Bollywood Hits",
+    "spotifyGenre": "indian"
+  },
+  "Irish": {
+    "genre": "Folk / Celtic",
+    "playlist": "Irish Traditional",
+    "spotifyGenre": "folk"
+  },
+  "Italian": {
+    "genre": "Classical / Opera",
+    "playlist": "Italian Dinner Music",
+    "spotifyGenre": "classical"
+  },
+  "Jamaican": {
+    "genre": "Reggae / Dancehall",
+    "playlist": "Reggae Classics",
+    "spotifyGenre": "reggae"
+  },
+  "Japanese": {
+    "genre": "Lo-Fi / J-Pop",
+    "playlist": "Tokyo Lofi",
+    "spotifyGenre": "j-pop"
+  },
+  "Kenyan": {
+    "genre": "Afrobeat / World",
+    "playlist": "African Rhythms",
+    "spotifyGenre": "afrobeat"
+  },
+  "Malaysian": {
+    "genre": "Pop / World",
+    "playlist": "Southeast Asian Pop",
+    "spotifyGenre": "pop"
+  },
+  "Mexican": {
+    "genre": "Latin / Reggaeton",
+    "playlist": "¡Viva Latino!",
+    "spotifyGenre": "latin"
+  },
+  "Moroccan": {
+    "genre": "World / North African",
+    "playlist": "Moroccan Nights",
+    "spotifyGenre": "world-music"
+  },
+  "Polish": {
+    "genre": "Folk / Polka",
+    "playlist": "Eastern European Folk",
+    "spotifyGenre": "folk"
+  },
+  "Portuguese": {
+    "genre": "Fado / Bossa Nova",
+    "playlist": "Portuguese Fado",
+    "spotifyGenre": "bossanova"
+  },
+  "Russian": {
+    "genre": "Classical / Folk",
+    "playlist": "Russian Classics",
+    "spotifyGenre": "classical"
+  },
+  "Spanish": {
+    "genre": "Flamenco / Latin",
+    "playlist": "Spanish Guitar",
+    "spotifyGenre": "latin"
+  },
+  "Thai": {
+    "genre": "World / Pop",
+    "playlist": "Thai Pop",
+    "spotifyGenre": "pop"
+  },
+  "Tunisian": {
+    "genre": "World / North African",
+    "playlist": "North African Beats",
+    "spotifyGenre": "world-music"
+  },
+  "Turkish": {
+    "genre": "Folk / World",
+    "playlist": "Turkish Delights",
+    "spotifyGenre": "world-music"
+  },
+  "Ukrainian": {
+    "genre": "Folk / Classical",
+    "playlist": "Ukrainian Folk",
+    "spotifyGenre": "folk"
+  },
+  "Vietnamese": {
+    "genre": "Pop / World",
+    "playlist": "Vietnamese Pop",
+    "spotifyGenre": "pop"
+  },
+  "Unknown": {
+    "genre": "Chill / Ambient",
+    "playlist": "Cooking Vibes",
+    "spotifyGenre": "ambient"
+  }
+}

@@ -1,138 +1,148 @@
-import React, { useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
-import { View, Text, Button, Colors, Typography } from 'react-native-ui-lib';
-import { useAuth } from '@hooks/useAuth';
-import { LoadingSpinner } from '@components/common/LoadingSpinner';
-import { APP_CONFIG } from '@utils/constants';
-import type { AuthStackScreenProps } from '../../navigation/types';
+import React from 'react';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSpotifyAuth } from '../../hooks/useSpotifyAuth';
+import { useAuth } from '../../hooks/useAuth';
 
-type LoginScreenProps = AuthStackScreenProps<'Login'>;
-
-export const LoginScreen: React.FC<LoginScreenProps> = () => {
-  const { login, isLoading, error } = useAuth();
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+export const LoginScreen: React.FC = () => {
+  const { login: spotifyLogin, isLoading, isReady } = useSpotifyAuth();
+  const { login } = useAuth();
 
   const handleSpotifyLogin = async () => {
     try {
-      setIsLoggingIn(true);
-      const success = await login();
-      
-      if (!success && error) {
-        Alert.alert('Login Failed', error);
+      const result = await spotifyLogin();
+      if ('user' in result) {
+        // Success, the useAuth hook should handle the state update
+        console.log('Login successful!');
+      } else {
+        // Handle error
+        Alert.alert('Login Failed', result.message);
       }
-    } catch (err) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
-    } finally {
-      setIsLoggingIn(false);
+    } catch (error) {
+      Alert.alert('Login Error', error instanceof Error ? error.message : 'Unknown error');
     }
   };
 
-  if (isLoading || isLoggingIn) {
-    return <LoadingSpinner />;
-  }
-
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        {/* Logo placeholder */}
-        <View style={styles.logoPlaceholder}>
-          <Text style={styles.logoText}>🍽️🎵</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>🎵 Food n' Jam</Text>
+          <Text style={styles.subtitle}>
+            Discover the perfect meal for your music taste
+          </Text>
         </View>
-        
-        <Text style={styles.title}>{APP_CONFIG.name}</Text>
-        <Text style={styles.subtitle}>Pair your meals with the perfect playlist</Text>
-      </View>
 
-      <View style={styles.illustration}>
-        {/* Illustration placeholder - we'll add actual image later */}
-        <View style={styles.illustrationPlaceholder}>
-          <Text style={styles.illustrationText}>🍜 + 🎶 = ❤️</Text>
+        <View style={styles.loginSection}>
+          <Text style={styles.loginText}>
+            Connect your Spotify account to get personalized meal recommendations based on your music preferences
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.spotifyButton, (!isReady || isLoading) && styles.disabledButton]}
+            onPress={handleSpotifyLogin}
+            disabled={!isReady || isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text style={styles.buttonText}>Continue with Spotify</Text>
+            )}
+          </TouchableOpacity>
+
+          {!isReady && (
+            <Text style={styles.loadingText}>
+              Preparing Spotify authentication...
+            </Text>
+          )}
+
+          {isLoading && (
+            <Text style={styles.loadingText}>
+              Logging in...
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            By continuing, you agree to connect your Spotify account to discover music-inspired meals
+          </Text>
         </View>
       </View>
-
-      <View style={styles.footer}>
-        <Button
-          label="Continue with Spotify"
-          backgroundColor={Colors.green30}
-          color={Colors.white}
-          borderRadius={12}
-          size="large"
-          onPress={handleSpotifyLogin}
-          disabled={isLoggingIn}
-          style={styles.spotifyButton}
-        />
-        
-        <Text style={styles.disclaimer}>
-          By continuing, you agree to connect your Spotify account and allow us to access your playlists.
-        </Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
-    paddingVertical: 60,
+    paddingVertical: 32,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
-  },
-  logoPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  logoText: {
-    fontSize: 32,
+    marginTop: 60,
   },
   title: {
-    ...Typography.text30,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.text,
-    marginBottom: 8,
-    textAlign: 'center',
+    color: '#1a1a1a',
+    marginBottom: 16,
   },
   subtitle: {
-    ...Typography.text70,
-    color: Colors.grey30,
+    fontSize: 18,
+    color: '#666',
     textAlign: 'center',
+    lineHeight: 24,
   },
-  illustration: {
+  loginSection: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  illustrationPlaceholder: {
-    width: 200,
-    height: 200,
-    borderRadius: 20,
-    backgroundColor: Colors.grey70,
+  loginText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 32,
+    paddingHorizontal: 16,
+  },
+  spotifyButton: {
+    backgroundColor: '#1DB954', // Spotify green
+    height: 56,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 24,
+    minWidth: 250,
   },
-  illustrationText: {
-    fontSize: 48,
+  disabledButton: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loadingText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
   },
   footer: {
     alignItems: 'center',
   },
-  spotifyButton: {
-    width: '100%',
-    height: 56,
-    marginBottom: 20,
-  },
-  disclaimer: {
-    ...Typography.text90,
-    color: Colors.grey30,
+  footerText: {
+    fontSize: 12,
+    color: '#999',
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 16,
   },
 });

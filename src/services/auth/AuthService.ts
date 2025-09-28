@@ -1,65 +1,28 @@
-import * as AuthSession from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
-import * as WebBrowser from 'expo-web-browser';
 import { supabase } from '../api/supabase';
-import type { SpotifyTokens, User, AuthError } from '@types';
-import { AUTH_CONFIG, STORAGE_KEYS } from '@utils/constants';
+import type { SpotifyTokens, User, AuthError } from '../../types';
+import { STORAGE_KEYS } from '../../utils/constants';
 import {
   EXPO_PUBLIC_SPOTIFY_CLIENT_ID,
   EXPO_PUBLIC_REDIRECT_URI,
 } from '@env';
 
-// Complete the auth session for web browsers
-WebBrowser.maybeCompleteAuthSession();
-
 class AuthService {
-  // Configure Spotify OAuth request
-  private async createAuthRequest() {
-    const discovery = AuthSession.useAutoDiscovery('https://accounts.spotify.com');
-    
-    return AuthSession.useAuthRequest(
-      {
-        clientId: EXPO_PUBLIC_SPOTIFY_CLIENT_ID,
-        scopes: AUTH_CONFIG.SPOTIFY_SCOPES.split(' '),
-        redirectUri: EXPO_PUBLIC_REDIRECT_URI,
-        responseType: AuthSession.ResponseType.Code,
-        additionalParameters: {},
-        extraParams: {
-          show_dialog: 'true', // Force Spotify login dialog
-        },
-      },
-      discovery
-    );
-  }
-
-  // Initiate Spotify login
-  async loginWithSpotify(): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
+  // Complete Spotify login (called from hook)
+  async completeSpotifyLogin(code: string): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
     try {
-      const [request, response, promptAsync] = await this.createAuthRequest();
-
-      if (!request) {
-        throw new Error('Failed to create auth request');
-      }
-
-      // Prompt for authentication
-      const result = await promptAsync();
-
-      if (result.type !== 'success') {
-        throw new Error('Authentication cancelled or failed');
-      }
-
       // Exchange code for tokens
-      const tokens = await this.exchangeCodeForTokens(result.params.code);
+      const tokens = await this.exchangeCodeForTokens(code);
       
       // Get user info from Spotify
       const spotifyUser = await this.getSpotifyUserInfo(tokens.access_token);
       
       // Create/update user in Supabase
       const user = await this.createOrUpdateUser(spotifyUser, tokens);
-
+      
       // Store tokens securely
       await this.storeTokens(tokens);
-
+      
       return { user, tokens };
     } catch (error) {
       return {
@@ -68,6 +31,15 @@ class AuthService {
         details: error,
       };
     }
+  }
+
+  // For backward compatibility with useAuth
+  async loginWithSpotify(): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
+    return {
+      message: 'Use useSpotifyAuth hook instead',
+      code: 'DEPRECATED_METHOD',
+      details: null,
+    };
   }
 
   // Exchange authorization code for access tokens
@@ -116,10 +88,10 @@ class AuthService {
       avatar_url: spotifyUser.images?.[0]?.url,
     };
 
-    // Sign in with Supabase (creates user if doesn't exist)
+    // Try to sign in first
     const { data, error } = await supabase.auth.signInWithPassword({
       email: userData.email || `${userData.spotify_id}@spotify.local`,
-      password: userData.spotify_id, // Using Spotify ID as password
+      password: userData.spotify_id,
     });
 
     if (error && error.message.includes('Invalid login credentials')) {
@@ -133,11 +105,37 @@ class AuthService {
       });
 
       if (signUpError) throw signUpError;
-      return signUpData.user as User;
+      
+      if (signUpData.user) {
+        return {
+          id: signUpData.user.id,
+          spotify_id: userData.spotify_id,
+          email: userData.email,
+          display_name: userData.display_name,
+          avatar_url: userData.avatar_url,
+          created_at: signUpData.user.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      } else {
+        throw new Error('Failed to create user');
+      }
     }
 
     if (error) throw error;
-    return data.user as User;
+    
+    if (data.user) {
+      return {
+        id: data.user.id,
+        spotify_id: userData.spotify_id,
+        email: userData.email,
+        display_name: userData.display_name,
+        avatar_url: userData.avatar_url,
+        created_at: data.user.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+    } else {
+      throw new Error('Failed to authenticate user');
+    }
   }
 
   // Store tokens securely
@@ -155,7 +153,7 @@ class AuthService {
     }
   }
 
-  // Check if tokens are valid
+  // Check if tokens are valid - ADD THIS METHOD
   async checkTokenValidity(tokens: SpotifyTokens): Promise<boolean> {
     try {
       const response = await fetch('https://api.spotify.com/v1/me', {
@@ -169,7 +167,7 @@ class AuthService {
     }
   }
 
-  // Refresh access token
+  // Refresh access token - ADD THIS METHOD
   async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',

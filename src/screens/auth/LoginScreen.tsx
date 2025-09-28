@@ -6,14 +6,15 @@ import { useAuth } from '../../hooks/useAuth';
 
 export const LoginScreen: React.FC = () => {
   const { login: spotifyLogin, isLoading, isReady } = useSpotifyAuth();
-  const { login } = useAuth();
+  const { login } = useAuth(); // This updates the auth state
 
   const handleSpotifyLogin = async () => {
     try {
       const result = await spotifyLogin();
       if ('user' in result) {
-        // Success, the useAuth hook should handle the state update
+        // Success! Now update the auth state
         console.log('Login successful!');
+        await login(); // This will trigger useAuth to refresh and detect the stored user
       } else {
         // Handle error
         Alert.alert('Login Failed', result.message);

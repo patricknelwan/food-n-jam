@@ -12,7 +12,7 @@ WebBrowser.maybeCompleteAuthSession();
 export const useSpotifyAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  // Configure Spotify OAuth request (hooks called at top level)
+  // Configure Spotify OAuth request with PKCE
   const discovery = AuthSession.useAutoDiscovery('https://accounts.spotify.com');
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -20,6 +20,7 @@ export const useSpotifyAuth = () => {
       scopes: ['user-read-email', 'user-read-private', 'playlist-read-private'],
       redirectUri: EXPO_PUBLIC_REDIRECT_URI,
       responseType: AuthSession.ResponseType.Code,
+      usePKCE: true, // Enable PKCE
       extraParams: {
         show_dialog: 'true',
       },
@@ -40,7 +41,11 @@ export const useSpotifyAuth = () => {
         throw new Error('Authentication cancelled or failed');
       }
 
-      const loginResult = await authService.completeSpotifyLogin(result.params.code);
+      // Pass both code and codeVerifier to the service
+      const loginResult = await authService.completeSpotifyLogin(
+        result.params.code,
+        request.codeVerifier // Pass the code verifier
+      );
       
       setIsLoading(false);
       return loginResult;

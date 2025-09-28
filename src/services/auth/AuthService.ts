@@ -1,5 +1,4 @@
 import * as SecureStore from 'expo-secure-store';
-import { supabase } from '../api/supabase';
 import type { SpotifyTokens, User, AuthError } from '../../types';
 import { STORAGE_KEYS } from '../../utils/constants';
 import {
@@ -8,23 +7,47 @@ import {
 } from '@env';
 
 class AuthService {
-  // Complete Spotify login (called from hook)
-  async completeSpotifyLogin(code: string): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
+  // Complete Spotify login (called from useSpotifyAuth hook)
+  async completeSpotifyLogin(
+    code: string, 
+    codeVerifier?: string
+  ): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
     try {
-      // Exchange code for tokens
-      const tokens = await this.exchangeCodeForTokens(code);
+      console.log('🔄 Starting Spotify login process...');
+      
+      // Exchange code for tokens with PKCE
+      console.log('🔄 Step 1: Exchange code for tokens');
+      const tokens = await this.exchangeCodeForTokens(code, codeVerifier);
+      console.log('✅ Step 1: Got tokens successfully');
       
       // Get user info from Spotify
+      console.log('🔄 Step 2: Get user info from Spotify');
       const spotifyUser = await this.getSpotifyUserInfo(tokens.access_token);
+      console.log('✅ Step 2: Got Spotify user info:', spotifyUser.display_name);
       
-      // Create/update user in Supabase
-      const user = await this.createOrUpdateUser(spotifyUser, tokens);
+      // Create user object (skip Supabase for now)
+      console.log('🔄 Step 3: Create user object locally');
+      const user: User = {
+        id: spotifyUser.id, // Use Spotify ID as our user ID for now
+        spotify_id: spotifyUser.id,
+        email: spotifyUser.email,
+        display_name: spotifyUser.display_name,
+        avatar_url: spotifyUser.images?.[0]?.url,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      console.log('✅ Step 3: User object created successfully');
       
-      // Store tokens securely
+      // Store both tokens and user data locally
+      console.log('🔄 Step 4: Store data locally');
       await this.storeTokens(tokens);
+      await this.storeUser(user);
+      console.log('✅ Step 4: Data stored successfully');
       
+      console.log('🎉 Login completed successfully!');
       return { user, tokens };
     } catch (error) {
+      console.error('❌ Login failed:', error);
       return {
         message: error instanceof Error ? error.message : 'Authentication failed',
         code: 'AUTH_ERROR',
@@ -36,32 +59,40 @@ class AuthService {
   // For backward compatibility with useAuth
   async loginWithSpotify(): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
     return {
-      message: 'Use useSpotifyAuth hook instead',
+      message: 'Use useSpotifyAuth hook and LoginScreen instead of direct service call',
       code: 'DEPRECATED_METHOD',
       details: null,
     };
   }
 
-  // Exchange authorization code for access tokens
-  private async exchangeCodeForTokens(code: string): Promise<SpotifyTokens> {
+  // Exchange authorization code for access tokens with PKCE
+  private async exchangeCodeForTokens(code: string, codeVerifier?: string): Promise<SpotifyTokens> {
+    const body = new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: EXPO_PUBLIC_REDIRECT_URI,
+      client_id: EXPO_PUBLIC_SPOTIFY_CLIENT_ID,
+    });
+
+    if (codeVerifier) {
+      body.append('code_verifier', codeVerifier);
+    }
+
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: EXPO_PUBLIC_REDIRECT_URI,
-        client_id: EXPO_PUBLIC_SPOTIFY_CLIENT_ID,
-      }).toString(),
+      body: body.toString(),
     });
 
+    const responseText = await response.text();
+
     if (!response.ok) {
-      throw new Error('Failed to exchange code for tokens');
+      throw new Error(`Failed to exchange code for tokens: ${response.status} - ${responseText}`);
     }
 
-    return response.json();
+    return JSON.parse(responseText);
   }
 
   // Get user info from Spotify API
@@ -72,75 +103,33 @@ class AuthService {
       },
     });
 
+    const responseText = await response.text();
+
     if (!response.ok) {
-      throw new Error('Failed to get user info from Spotify');
+      throw new Error(`Failed to get user info from Spotify: ${response.status} - ${responseText}`);
     }
 
-    return response.json();
-  }
-
-  // Create or update user in Supabase
-  private async createOrUpdateUser(spotifyUser: any, tokens: SpotifyTokens): Promise<User> {
-    const userData = {
-      spotify_id: spotifyUser.id,
-      email: spotifyUser.email,
-      display_name: spotifyUser.display_name,
-      avatar_url: spotifyUser.images?.[0]?.url,
-    };
-
-    // Try to sign in first
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: userData.email || `${userData.spotify_id}@spotify.local`,
-      password: userData.spotify_id,
-    });
-
-    if (error && error.message.includes('Invalid login credentials')) {
-      // User doesn't exist, create them
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: userData.email || `${userData.spotify_id}@spotify.local`,
-        password: userData.spotify_id,
-        options: {
-          data: userData,
-        },
-      });
-
-      if (signUpError) throw signUpError;
-      
-      if (signUpData.user) {
-        return {
-          id: signUpData.user.id,
-          spotify_id: userData.spotify_id,
-          email: userData.email,
-          display_name: userData.display_name,
-          avatar_url: userData.avatar_url,
-          created_at: signUpData.user.created_at || new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      } else {
-        throw new Error('Failed to create user');
-      }
-    }
-
-    if (error) throw error;
-    
-    if (data.user) {
-      return {
-        id: data.user.id,
-        spotify_id: userData.spotify_id,
-        email: userData.email,
-        display_name: userData.display_name,
-        avatar_url: userData.avatar_url,
-        created_at: data.user.created_at || new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-    } else {
-      throw new Error('Failed to authenticate user');
-    }
+    return JSON.parse(responseText);
   }
 
   // Store tokens securely
   private async storeTokens(tokens: SpotifyTokens): Promise<void> {
     await SecureStore.setItemAsync(STORAGE_KEYS.SPOTIFY_TOKENS, JSON.stringify(tokens));
+  }
+
+  // Store user securely
+  private async storeUser(user: User): Promise<void> {
+    await SecureStore.setItemAsync('USER_DATA', JSON.stringify(user));
+  }
+
+  // Get stored user
+  async getStoredUser(): Promise<User | null> {
+    try {
+      const user = await SecureStore.getItemAsync('USER_DATA');
+      return user ? JSON.parse(user) : null;
+    } catch {
+      return null;
+    }
   }
 
   // Get stored tokens
@@ -153,7 +142,7 @@ class AuthService {
     }
   }
 
-  // Check if tokens are valid - ADD THIS METHOD
+  // Check if tokens are valid
   async checkTokenValidity(tokens: SpotifyTokens): Promise<boolean> {
     try {
       const response = await fetch('https://api.spotify.com/v1/me', {
@@ -167,7 +156,7 @@ class AuthService {
     }
   }
 
-  // Refresh access token - ADD THIS METHOD
+  // Refresh access token
   async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -181,11 +170,13 @@ class AuthService {
       }).toString(),
     });
 
+    const responseText = await response.text();
+
     if (!response.ok) {
-      throw new Error('Failed to refresh token');
+      throw new Error(`Failed to refresh token: ${response.status} - ${responseText}`);
     }
 
-    const newTokens = await response.json();
+    const newTokens = JSON.parse(responseText);
     await this.storeTokens(newTokens);
     return newTokens;
   }
@@ -193,13 +184,13 @@ class AuthService {
   // Logout
   async logout(): Promise<void> {
     await SecureStore.deleteItemAsync(STORAGE_KEYS.SPOTIFY_TOKENS);
-    await supabase.auth.signOut();
+    await SecureStore.deleteItemAsync('USER_DATA');
   }
 
-  // Get current session
+  // Get current session (simplified - just return stored user)
   async getCurrentSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session;
+    const user = await this.getStoredUser();
+    return user ? { user } : null;
   }
 }
 

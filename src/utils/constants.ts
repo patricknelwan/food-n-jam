@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
 export const STORAGE_KEYS = {
   USER_SESSION: 'user_session',
   SPOTIFY_TOKENS: 'spotify_tokens',
+  USER_DATA: 'user_data',
   CACHED_MEALS: 'cached_meals',
   CACHED_PLAYLISTS: 'cached_playlists',
   USER_PREFERENCES: 'user_preferences',

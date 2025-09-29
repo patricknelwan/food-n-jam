@@ -1,15 +1,16 @@
-// App.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LoginScreen } from './src/screens/auth/LoginScreen';
-import { AppNavigator } from './src/navigation/AppNavigator'; // Your main app navigation
-import { useAuth } from './src/hooks/useAuth';
+import { AppNavigator } from './src/navigation/AppNavigator';
+import { AuthProvider, useAuth } from './src/contexts/AuthContext'; // Import AuthProvider
 
-export default function App() {
-  const { isAuthenticated, isLoading, user } = useAuth();
+// Create a separate component for the auth-aware content
+const AppContent: React.FC = () => {
+  const { authState, user } = useAuth();
 
-  // Show loading screen
-  if (isLoading) {
+  console.log('🔍 App.tsx - Current authState:', authState);
+
+  if (authState === 'loading') {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingText}>Loading...</Text>
@@ -17,13 +18,22 @@ export default function App() {
     );
   }
 
-  // Show login screen if not authenticated
-  if (!isAuthenticated) {
+  if (authState === 'unauthenticated') {
+    console.log('🔍 App.tsx - Showing LoginScreen');
     return <LoginScreen />;
   }
 
-  // Show main app if authenticated
+  console.log('🔍 App.tsx - Showing AppNavigator for user:', user?.display_name);
   return <AppNavigator />;
+};
+
+// Main App component wrapped with AuthProvider
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
 }
 
 const styles = StyleSheet.create({

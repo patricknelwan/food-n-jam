@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSpotifyAuth } from '@hooks/useSpotifyAuth';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import { Colors, Typography } from 'react-native-ui-lib';
 
 export const LoginScreen: React.FC = () => {

@@ -62,7 +62,6 @@ export const MealSearchScreen: React.FC = () => {
       <EmptyState
         title="Find Your Perfect Meal"
         message="Search for meals by name, ingredient, or cuisine type"
-        icon="🔍"
       />
     );
   };

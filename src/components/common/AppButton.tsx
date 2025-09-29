@@ -21,32 +21,34 @@ export const AppButton: React.FC<AppButtonProps> = ({
   disabled = false,
   style,
 }) => {
+  const isDisabled = disabled || loading;
+  
   const buttonStyle = [
     styles.base,
     styles[size],
     styles[variant],
-    (disabled || loading) && styles.disabled,
+    isDisabled && styles.disabled,
     style,
   ];
 
   const textStyle = [
     styles.text,
     styles[`${variant}Text`],
-    (disabled || loading) && styles.disabledText,
+    styles[`${size}Text`],
+    isDisabled && styles.disabledText,
   ];
+
+  const spinnerColor = variant === 'outline' ? theme.colors.primary : theme.colors.textInverse;
 
   return (
     <TouchableOpacity
       style={buttonStyle}
       onPress={onPress}
-      disabled={disabled || loading}
+      disabled={isDisabled}
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator 
-          color={variant === 'outline' ? theme.colors.primary : theme.colors.textInverse} 
-          size="small" 
-        />
+        <ActivityIndicator color={spinnerColor} size="small" />
       ) : (
         <Text style={textStyle}>{label}</Text>
       )}
@@ -89,11 +91,27 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   
-  // Text styles
+  // Text base
   text: {
-    ...theme.typography.textStyles.button,
+    fontWeight: theme.typography.fontWeight.semibold,
     textAlign: 'center',
   },
+  
+  // Text sizes
+  smallText: {
+    fontSize: theme.typography.fontSize.sm,
+    lineHeight: theme.typography.fontSize.sm * 1.2,
+  },
+  mediumText: {
+    fontSize: theme.typography.fontSize.base,
+    lineHeight: theme.typography.fontSize.base * 1.2,
+  },
+  largeText: {
+    fontSize: theme.typography.fontSize.lg,
+    lineHeight: theme.typography.fontSize.lg * 1.2,
+  },
+  
+  // Text variants
   primaryText: {
     color: theme.colors.textInverse,
   },

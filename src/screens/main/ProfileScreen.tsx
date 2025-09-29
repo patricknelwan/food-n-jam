@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Alert } from 'react-native';
 import { View, Text, Colors, Typography, Avatar } from 'react-native-ui-lib';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppButton } from '@components/common/AppButton';
 import { AppCard } from '@components/common/AppCard';
+import { StatCard } from '@components/common/StatCard';
 import { useAuth } from '@hooks/useAuth';
 import { useFavorites } from '@hooks/useFavorites';
 import { UI_CONSTANTS, APP_CONFIG } from '@utils/constants';
@@ -11,9 +12,10 @@ import type { MainTabScreenProps } from '../../navigation/types';
 
 type ProfileScreenProps = MainTabScreenProps<'Profile'>;
 
-export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
+export const ProfileScreen: React.FC = () => {
   const { user, logout } = useAuth();
   const { stats } = useFavorites();
+  const insets = useSafeAreaInsets(); // Add this for dynamic padding
 
   const handleLogout = () => {
     Alert.alert(
@@ -21,10 +23,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
       'Are you sure you want to logout?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Logout', 
+        {
+          text: 'Logout',
           style: 'destructive',
-          onPress: logout 
+          onPress: logout
         },
       ]
     );
@@ -44,7 +46,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
   const handleAbout = () => {
     Alert.alert(
       `About ${APP_CONFIG.name}`,
-      `Version ${APP_CONFIG.version}\n\nPair your meals with the perfect playlist! Discover new music through food and new recipes through your favorite songs.\n\nMade with ❤️ for food and music lovers.`,
+      `Version ${APP_CONFIG.version}\n\nPair your meals with the perfect playlist! Discover new music through food and new recipes through your favorite songs.\n\nMade with care for food and music lovers.`,
       [{ text: 'OK' }]
     );
   };
@@ -72,25 +74,29 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + 100 } // Dynamic bottom padding
+        ]}
+      >
         {/* Profile Header */}
         <View style={styles.header}>
           <View style={styles.profileInfo}>
             <Avatar
-              source={user?.avatar_url ? { uri: user.avatar_url } : undefined}
-              label={user?.display_name?.charAt(0)?.toUpperCase() || 'U'}
               size={80}
+              source={{ uri: user?.avatar_url }}
               backgroundColor={Colors.primary}
-              labelColor={Colors.white}
+              label={user?.display_name?.[0] || 'U'}
             />
-            
             <View style={styles.userInfo}>
               <Text style={styles.displayName}>
                 {user?.display_name || 'Music Lover'}
               </Text>
-              <Text style={styles.email}>
+              {/* <Text style={styles.email}>
                 {user?.email || 'Connected via Spotify'}
-              </Text>
+              </Text> */}
               <Text style={styles.memberSince}>
                 Member since {formatMemberSince(user?.created_at || new Date().toISOString())}
               </Text>
@@ -100,40 +106,26 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
         {/* Stats Cards */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 Your Journey</Text>
-          
+          <Text style={styles.sectionTitle}>Your Journey</Text>
           <View style={styles.statsGrid}>
-            <AppCard
+            <StatCard
               title={stats.totalPairings.toString()}
-              subtitle="Saved Pairings"
-              icon="❤️"
-              size="small"
+              subtitle="Total Pairings"
               style={styles.statCard}
+              variant="success" // Green background
             />
-            
-            <AppCard
-              title={stats.uniqueMeals.toString()}
-              subtitle="Meals Discovered"
-              icon="🍽️"
-              size="small"
+            <StatCard
+              title={stats.uniqueMeals?.toString() || '0'}
+              subtitle="Unique Meals"
               style={styles.statCard}
+              variant="orange" // Orange background
             />
-            
-            <AppCard
-              title={stats.uniquePlaylists.toString()}
-              subtitle="Playlists Paired"
-              icon="🎵"
-              size="small"
-              style={styles.statCard}
-            />
-            
             {stats.topCuisine && (
-              <AppCard
+              <StatCard
                 title={stats.topCuisine}
                 subtitle="Favorite Cuisine"
-                icon="🌍"
-                size="small"
                 style={styles.statCard}
+                variant="default" // White with colored border
               />
             )}
           </View>
@@ -141,7 +133,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
           {stats.totalPairings === 0 && (
             <View style={styles.encouragement}>
               <Text style={styles.encouragementText}>
-                Start pairing meals with music to see your stats here! 🚀
+                Start pairing meals with music to see your stats here!
               </Text>
             </View>
           )}
@@ -149,29 +141,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
 
         {/* Account & Settings */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>⚙️ Account & Settings</Text>
-          
+          <Text style={styles.sectionTitle}>Account & Settings</Text>
           <View style={styles.settingsList}>
             <AppCard
               title="Spotify Connection"
-              subtitle="Manage your Spotify account"
-              icon="🎧"
+              subtitle="Manage your connected Spotify account"
               onPress={handleSpotifySettings}
               style={styles.settingCard}
             />
-            
             <AppCard
               title="Send Feedback"
               subtitle="Help us improve the app"
-              icon="💬"
               onPress={handleFeedback}
               style={styles.settingCard}
             />
-            
             <AppCard
               title="About"
               subtitle="App version and information"
-              icon="ℹ️"
               onPress={handleAbout}
               style={styles.settingCard}
             />
@@ -181,12 +167,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
         {/* Achievement Section (if user has pairings) */}
         {stats.totalPairings > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🏆 Achievements</Text>
-            
+            <Text style={styles.sectionTitle}>Achievements</Text>
             <View style={styles.achievementsList}>
               {stats.totalPairings >= 1 && (
                 <View style={styles.achievement}>
-                  <Text style={styles.achievementIcon}>🎉</Text>
+                  <View style={styles.achievementIconContainer}>
+                    <Text style={styles.achievementIcon}>1ST</Text>
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementTitle}>First Pairing</Text>
                     <Text style={styles.achievementDesc}>Saved your first meal + music combo</Text>
@@ -196,7 +183,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
               
               {stats.totalPairings >= 5 && (
                 <View style={styles.achievement}>
-                  <Text style={styles.achievementIcon}>⭐</Text>
+                  <View style={styles.achievementIconContainer}>
+                    <Text style={styles.achievementIcon}>5</Text>
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementTitle}>Getting Started</Text>
                     <Text style={styles.achievementDesc}>Saved 5 different pairings</Text>
@@ -206,7 +195,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
               
               {stats.totalPairings >= 10 && (
                 <View style={styles.achievement}>
-                  <Text style={styles.achievementIcon}>🔥</Text>
+                  <View style={styles.achievementIconContainer}>
+                    <Text style={styles.achievementIcon}>10</Text>
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementTitle}>On Fire</Text>
                     <Text style={styles.achievementDesc}>Reached 10 saved pairings</Text>
@@ -216,7 +207,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
               
               {stats.uniqueMeals >= 10 && (
                 <View style={styles.achievement}>
-                  <Text style={styles.achievementIcon}>🍽️</Text>
+                  <View style={styles.achievementIconContainer}>
+                    <Text style={styles.achievementIcon}>EX</Text>
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementTitle}>Food Explorer</Text>
                     <Text style={styles.achievementDesc}>Discovered 10+ different meals</Text>
@@ -233,7 +226,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = () => {
             label="Logout"
             onPress={handleLogout}
             variant="outline"
-            size="large"
             style={styles.logoutButton}
           />
         </View>
@@ -247,7 +239,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.grey80,
   },
-  
+  scrollContent: {
+    flexGrow: 1,
+  },
   header: {
     backgroundColor: Colors.white,
     padding: UI_CONSTANTS.SPACING.lg,
@@ -260,82 +254,67 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
   userInfo: {
     marginLeft: UI_CONSTANTS.SPACING.lg,
     flex: 1,
   },
-  
   displayName: {
     ...Typography.text50,
     fontWeight: 'bold',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
   email: {
     ...Typography.text70,
     color: Colors.grey20,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
   memberSince: {
     ...Typography.text80,
     color: Colors.grey40,
   },
-  
   section: {
     padding: UI_CONSTANTS.SPACING.lg,
   },
-  
   sectionTitle: {
     ...Typography.text60,
     fontWeight: '600',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.md,
   },
-  
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: UI_CONSTANTS.SPACING.md,
   },
-  
   statCard: {
     flex: 1,
     minWidth: '45%',
   },
-  
   encouragement: {
     marginTop: UI_CONSTANTS.SPACING.md,
     padding: UI_CONSTANTS.SPACING.md,
     backgroundColor: Colors.grey70,
     borderRadius: UI_CONSTANTS.CARD_BORDER_RADIUS,
   },
-  
   encouragementText: {
     ...Typography.text70,
     color: Colors.grey30,
     textAlign: 'center',
   },
-  
   settingsList: {
     gap: UI_CONSTANTS.SPACING.sm,
   },
-  
   settingCard: {
     marginBottom: 0,
   },
-  
   achievementsList: {
     gap: UI_CONSTANTS.SPACING.md,
   },
-  
   achievement: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -351,28 +330,34 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  
-  achievementIcon: {
-    fontSize: 32,
+  achievementIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: UI_CONSTANTS.SPACING.md,
   },
-  
+  achievementIcon: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: Colors.white,
+    textAlign: 'center',
+  },
   achievementInfo: {
     flex: 1,
   },
-  
   achievementTitle: {
     ...Typography.text60,
     fontWeight: '600',
     color: Colors.text,
     marginBottom: 2,
   },
-  
   achievementDesc: {
     ...Typography.text80,
     color: Colors.grey30,
   },
-  
   logoutButton: {
     width: '100%',
   },

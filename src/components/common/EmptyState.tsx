@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { AppButton } from './AppButton';
-import { theme } from '../../theme';
 
 interface EmptyStateProps {
   title: string;
   message: string;
   actionLabel?: string;
   onAction?: () => void;
-  icon?: string;
+  type?: 'search' | 'error' | 'empty' | 'loading';
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -16,24 +16,38 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   message,
   actionLabel,
   onAction,
-  icon = '🔍',
+  type = 'empty',
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.icon}>{icon}</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
-      
-      {actionLabel && onAction && (
-        <AppButton
-          label={actionLabel}
-          onPress={onAction}
-          variant="outline"
-          style={styles.action}
-        />
-      )}
+      <View style={styles.content} center>
+        <View style={[styles.iconContainer, styles[`${type}Icon`]]}>
+          <Text style={styles.iconText}>{getIconText(type)}</Text>
+        </View>
+        <Text style={styles.title} center>{title}</Text>
+        <Text style={styles.message} center>{message}</Text>
+        
+        {actionLabel && onAction && (
+          <AppButton
+            label={actionLabel}
+            onPress={onAction}
+            variant="outline"
+            style={styles.action}
+          />
+        )}
+      </View>
     </View>
   );
+};
+
+const getIconText = (type: string) => {
+  switch (type) {
+    case 'search': return 'SEARCH';
+    case 'error': return 'ERROR';
+    case 'empty': return 'EMPTY';
+    case 'loading': return 'LOADING';
+    default: return 'INFO';
+  }
 };
 
 const styles = StyleSheet.create({
@@ -41,26 +55,54 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing['2xl'],
+    paddingHorizontal: 32,
+    paddingVertical: 48,
+    minHeight: 300,
   },
-  icon: {
-    fontSize: 64,
-    marginBottom: theme.spacing.lg,
+  content: {
+    alignItems: 'center',
+    maxWidth: 300,
+  },
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  searchIcon: {
+    backgroundColor: Colors.blue70,
+  },
+  errorIcon: {
+    backgroundColor: Colors.red70,
+  },
+  emptyIcon: {
+    backgroundColor: Colors.grey60,
+  },
+  loadingIcon: {
+    backgroundColor: Colors.primary,
+  },
+  iconText: {
+    fontSize: 12,
+    color: Colors.white,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   title: {
-    ...theme.typography.textStyles.h3,
-    color: theme.colors.textPrimary,
-    textAlign: 'center',
-    marginBottom: theme.spacing.md,
+    ...Typography.text50,
+    color: Colors.grey10,
+    marginBottom: 16,
+    fontWeight: '600',
   },
   message: {
-    ...theme.typography.textStyles.body,
-    color: theme.colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: theme.typography.lineHeight.relaxed,
-    marginBottom: theme.spacing.xl,
+    ...Typography.text70,
+    color: Colors.grey30,
+    lineHeight: 22,
+    marginBottom: 32,
   },
   action: {
-    marginTop: theme.spacing.md,
+    marginTop: 16,
+    minWidth: 140,
   },
 });

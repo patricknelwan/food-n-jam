@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSpotifyAuth } from '@hooks/useSpotifyAuth';
 import { useAuth } from '@hooks/useAuth';
-import { theme } from '../../theme';
+import { Colors, Typography } from 'react-native-ui-lib';
 
 export const LoginScreen: React.FC = () => {
   const { login: spotifyLogin, isLoading, isReady } = useSpotifyAuth();
@@ -27,7 +27,7 @@ export const LoginScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>🎵 Food n' Jam</Text>
+          <Text style={styles.title}>Food n' Jam</Text>
           <Text style={styles.subtitle}>
             Discover the perfect meal for your music taste
           </Text>
@@ -47,7 +47,7 @@ export const LoginScreen: React.FC = () => {
             disabled={!isReady || isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color={theme.colors.textInverse} size="small" />
+              <ActivityIndicator color={Colors.white} size="small" />
             ) : (
               <Text style={styles.buttonText}>Continue with Spotify</Text>
             )}
@@ -79,29 +79,30 @@ export const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: Colors.white,
   },
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing['2xl'],
-    paddingVertical: theme.spacing['3xl'],
+    paddingHorizontal: 24,
+    paddingVertical: 32,
   },
   header: {
     alignItems: 'center',
-    marginTop: theme.spacing['6xl'],
+    marginTop: 60,
   },
   title: {
-    ...theme.typography.textStyles.h1,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing.lg,
+    ...Typography.text30,
+    fontWeight: 'bold',
+    color: Colors.grey10,
+    marginBottom: 16,
     textAlign: 'center',
   },
   subtitle: {
-    ...theme.typography.textStyles.body,
-    color: theme.colors.textSecondary,
+    ...Typography.text60,
+    color: Colors.grey30,
     textAlign: 'center',
-    lineHeight: theme.typography.lineHeight.relaxed,
+    lineHeight: 24,
   },
   loginSection: {
     flex: 1,
@@ -109,43 +110,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginText: {
-    ...theme.typography.textStyles.body,
-    color: theme.colors.textSecondary,
+    ...Typography.text70,
+    color: Colors.grey30,
     textAlign: 'center',
-    lineHeight: theme.typography.lineHeight.relaxed,
-    marginBottom: theme.spacing['3xl'],
-    paddingHorizontal: theme.spacing.lg,
+    lineHeight: 22,
+    marginBottom: 32,
+    paddingHorizontal: 16,
   },
   spotifyButton: {
-    backgroundColor: theme.colors.spotifyGreen,
+    backgroundColor: '#1DB954',
     height: 56,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-    paddingHorizontal: theme.spacing['2xl'],
-    minWidth: 280,
-    ...theme.shadows.medium,
+    marginBottom: 16,
+    paddingHorizontal: 24,
+    minWidth: 250,
   },
   disabledButton: {
     opacity: 0.6,
   },
   buttonText: {
-    ...theme.typography.textStyles.button,
-    color: theme.colors.textInverse,
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   loadingText: {
-    ...theme.typography.textStyles.caption,
-    color: theme.colors.textTertiary,
+    ...Typography.text80,
+    color: Colors.grey40,
     textAlign: 'center',
   },
   footer: {
     alignItems: 'center',
   },
   footerText: {
-    ...theme.typography.textStyles.small,
-    color: theme.colors.textTertiary,
+    ...Typography.text80,
+    color: Colors.grey40,
     textAlign: 'center',
-    lineHeight: theme.typography.lineHeight.normal,
+    lineHeight: 16,
   },
 });

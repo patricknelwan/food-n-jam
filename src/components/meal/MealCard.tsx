@@ -1,43 +1,60 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, View, Text } from 'react-native';
 import { theme } from '../../theme';
+import type { Meal } from '../../types/meal';
 
 interface MealCardProps {
-  meal: {
-    id: string;
-    name: string;
-    image?: string;
-    category?: string;
-  };
+  meal: Meal;
   onPress: () => void;
-  size?: 'small' | 'medium' | 'large';
   style?: any;
+  size?: 'small' | 'medium' | 'large';
 }
 
-export const MealCard: React.FC<MealCardProps> = ({ 
-  meal, 
-  onPress, 
+export const MealCard: React.FC<MealCardProps> = ({
+  meal,
+  onPress,
+  style,
   size = 'medium',
-  style 
 }) => {
   return (
     <TouchableOpacity 
-      style={[styles.card, styles[size], style]} 
-      onPress={onPress} 
+      style={[styles.card, styles[`${size}Card`], style]} 
+      onPress={onPress}
       activeOpacity={0.8}
     >
-      <Image 
-        source={{ uri: meal.image || 'https://via.placeholder.com/150' }}
+      <Image
+        source={{ uri: meal.image || 'https://via.placeholder.com/300' }}
         style={[styles.image, styles[`${size}Image`]]}
+        resizeMode="cover"
       />
+      
       <View style={styles.content}>
-        <Text style={[styles.name, styles[`${size}Name`]]} numberOfLines={2}>
+        <Text style={[styles.title, styles[`${size}Title`]]} numberOfLines={2}>
           {meal.name}
         </Text>
-        {meal.category && (
-          <Text style={[styles.category, styles[`${size}Category`]]}>
-            {meal.category}
-          </Text>
+        
+        <View style={styles.metadata}>
+          {meal.cuisine && (
+            <View style={[styles.badge, styles.cuisineBadge]}>
+              <Text style={styles.badgeText}>{meal.cuisine}</Text>
+            </View>
+          )}
+          
+          {meal.category && (
+            <View style={[styles.badge, styles.categoryBadge]}>
+              <Text style={styles.badgeText}>{meal.category}</Text>
+            </View>
+          )}
+        </View>
+
+        {meal.tags && meal.tags.length > 0 && (
+          <View style={styles.tags}>
+            {meal.tags.slice(0, 3).map((tag, index) => (
+              <Text key={index} style={styles.tag}>
+                #{tag}
+              </Text>
+            ))}
+          </View>
         )}
       </View>
     </TouchableOpacity>
@@ -49,81 +66,94 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     ...theme.shadows.medium,
+    overflow: 'hidden',
   },
   
-  // Base sizes
-  small: {
-    padding: theme.spacing.sm,
+  // Card sizes
+  smallCard: {
     width: 140,
   },
-  medium: {
-    padding: theme.spacing.md,
+  mediumCard: {
     width: 160,
   },
-  large: {
-    padding: theme.spacing.md,
-    // Full width for large cards in lists
-  },
-  
-  // Base image
-  image: {
-    borderRadius: theme.borderRadius.md,
-    marginBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.gray100,
-  },
-  
-  // Image sizes
-  smallImage: {
+  largeCard: {
     width: '100%',
-    height: 80,
+  },
+  
+  // Image styles
+  image: {
+    backgroundColor: theme.colors.gray200,
+    width: '100%',
+  },
+  smallImage: {
+    height: 100,
   },
   mediumImage: {
-    width: '100%',
     height: 120,
   },
   largeImage: {
-    width: '100%',
-    height: 160,
+    height: 180,
   },
   
   content: {
-    paddingHorizontal: theme.spacing.xs,
+    padding: theme.spacing.md,
   },
   
-  // Base name styles
-  name: {
+  // Title styles
+  title: {
     fontWeight: theme.typography.fontWeight.semibold,
     color: theme.colors.textPrimary,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
   },
-  
-  // Name sizes
-  smallName: {
+  smallTitle: {
     fontSize: theme.typography.fontSize.sm,
     lineHeight: theme.typography.fontSize.sm * 1.3,
   },
-  mediumName: {
+  mediumTitle: {
     fontSize: theme.typography.fontSize.base,
-    lineHeight: theme.typography.fontSize.base * 1.4,
+    lineHeight: theme.typography.fontSize.base * 1.3,
   },
-  largeName: {
+  largeTitle: {
     fontSize: theme.typography.fontSize.lg,
-    lineHeight: theme.typography.fontSize.lg * 1.4,
+    lineHeight: theme.typography.fontSize.lg * 1.3,
   },
   
-  // Base category styles
-  category: {
-    color: theme.colors.textSecondary,
+  metadata: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
   },
   
-  // Category sizes
-  smallCategory: {
+  badge: {
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.sm,
+  },
+  
+  cuisineBadge: {
+    backgroundColor: theme.colors.primary,
+  },
+  
+  categoryBadge: {
+    backgroundColor: theme.colors.secondary,
+  },
+  
+  badgeText: {
     fontSize: theme.typography.fontSize.xs,
+    color: theme.colors.textInverse,
+    fontWeight: theme.typography.fontWeight.medium,
   },
-  mediumCategory: {
-    fontSize: theme.typography.fontSize.sm,
+  
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: theme.spacing.xs,
   },
-  largeCategory: {
-    fontSize: theme.typography.fontSize.sm,
+  
+  tag: {
+    fontSize: theme.typography.fontSize.xs,
+    color: theme.colors.textTertiary,
+    fontStyle: 'italic',
   },
 });

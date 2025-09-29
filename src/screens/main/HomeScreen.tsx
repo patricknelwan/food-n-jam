@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AppCard } from '@components/common/AppCard';
@@ -7,7 +8,7 @@ import { MealCard } from '@components/meal/MealCard';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useMeals } from '@hooks/useMeals';
 import { useAuth } from '@hooks/useAuth';
-import { theme } from '../../theme';
+import { UI_CONSTANTS } from '@utils/constants';
 
 interface HomeScreenProps {
   navigation: any;
@@ -50,12 +51,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.greeting}>
-            Hello, {user?.display_name || 'Music Lover'}! 👋
+            Hello, {user?.display_name || 'Music Lover'}!
           </Text>
           <Text style={styles.subtitle}>What's Your Vibe Today?</Text>
         </View>
@@ -63,25 +67,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* Main Action Cards */}
         <View style={styles.actionCards}>
           <AppCard
-            title="Meal → Playlist"
+            title="Meal to Playlist"
             subtitle="Find the perfect soundtrack for your meal"
-            icon="🍽️"
             onPress={handleMealToPlaylist}
             style={styles.actionCard}
+            variant="orange"
           />
           
           <AppCard
-            title="Playlist → Meal"
+            title="Playlist to Meal"
             subtitle="Discover meals that match your music"
-            icon="🎵"
             onPress={handlePlaylistToMeal}
             style={styles.actionCard}
+            variant="spotify"
           />
         </View>
 
         {/* Featured Meals Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🔥 Trending Meals</Text>
+          <Text style={styles.sectionTitle}>Trending Meals</Text>
           {isLoadingFeatured ? (
             <View style={styles.loadingContainer}>
               <LoadingSpinner />
@@ -106,22 +110,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>⚡ Quick Actions</Text>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.quickActions}>
             <AppCard
-              title="Surprise Me!"
+              title="Surprise Me"
               subtitle="Random meal + playlist combo"
-              icon="🎲"
               onPress={handleRandomPairing}
               style={styles.quickActionCard}
+              variant="default"
             />
             
             <AppCard
               title="My Favorites"
               subtitle="Your saved pairings"
-              icon="❤️"
               onPress={handleViewFavorites}
               style={styles.quickActionCard}
+              variant="default"
             />
           </View>
         </View>
@@ -133,38 +137,44 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: Colors.grey80,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 100, // Add bottom padding to account for tab bar
   },
   header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.xl,
-    paddingBottom: theme.spacing.md,
+    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
+    paddingTop: UI_CONSTANTS.SPACING.xl,
+    paddingBottom: UI_CONSTANTS.SPACING.md,
   },
   greeting: {
-    ...theme.typography.textStyles.h2,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing.xs,
+    ...Typography.text40,
+    fontWeight: 'bold',
+    color: Colors.grey10,
+    marginBottom: UI_CONSTANTS.SPACING.xs,
   },
   subtitle: {
-    ...theme.typography.textStyles.body,
-    color: theme.colors.textSecondary,
+    ...Typography.text60,
+    color: Colors.grey30,
   },
   actionCards: {
-    paddingHorizontal: theme.spacing.lg,
-    gap: theme.spacing.md,
-    marginBottom: theme.spacing.lg,
+    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
+    gap: UI_CONSTANTS.SPACING.md,
+    marginBottom: UI_CONSTANTS.SPACING.lg,
   },
   actionCard: {
-    marginBottom: theme.spacing.sm,
+    marginBottom: UI_CONSTANTS.SPACING.sm,
   },
   section: {
-    marginBottom: theme.spacing.xl,
+    marginBottom: UI_CONSTANTS.SPACING.xl,
   },
   sectionTitle: {
-    ...theme.typography.textStyles.h3,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
+    ...Typography.text50,
+    fontWeight: '600',
+    color: Colors.grey10,
+    marginBottom: UI_CONSTANTS.SPACING.md,
+    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
   },
   loadingContainer: {
     height: 200,
@@ -172,16 +182,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   horizontalScroll: {
-    paddingHorizontal: theme.spacing.lg,
-    gap: theme.spacing.md,
+    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
+    gap: UI_CONSTANTS.SPACING.md,
   },
   featuredMealCard: {
     width: 160,
   },
   quickActions: {
     flexDirection: 'row',
-    paddingHorizontal: theme.spacing.lg,
-    gap: theme.spacing.md,
+    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
+    gap: UI_CONSTANTS.SPACING.md,
   },
   quickActionCard: {
     flex: 1,

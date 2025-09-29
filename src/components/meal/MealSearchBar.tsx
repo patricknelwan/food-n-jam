@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
-import { UI_CONSTANTS } from '@utils/constants';
+import { theme } from '../../theme';
 
 interface MealSearchBarProps {
   placeholder?: string;
@@ -34,12 +34,14 @@ export const MealSearchBar: React.FC<MealSearchBarProps> = ({
     onClear?.();
   };
 
+  const handleSubmit = () => {
+    if (query.trim()) {
+      onSearch(query.trim());
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.searchIcon}>
-        <Text style={styles.iconText}>🔍</Text>
-      </View>
-      
       <TextInput
         style={styles.input}
         value={query}
@@ -48,7 +50,7 @@ export const MealSearchBar: React.FC<MealSearchBarProps> = ({
         placeholderTextColor={Colors.grey40}
         autoFocus={autoFocus}
         returnKeyType="search"
-        onSubmitEditing={() => onSearch(query)}
+        onSubmitEditing={handleSubmit}
       />
       
       {query.length > 0 && (
@@ -65,42 +67,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.white,
-    borderRadius: UI_CONSTANTS.BUTTON_BORDER_RADIUS,
-    paddingHorizontal: UI_CONSTANTS.SPACING.md,
-    paddingVertical: UI_CONSTANTS.SPACING.sm,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.grey60,
+    marginVertical: 8,
   },
-  
-  searchIcon: {
-    marginRight: UI_CONSTANTS.SPACING.sm,
-  },
-  
-  iconText: {
-    fontSize: 16,
-    color: Colors.grey30,
-  },
-  
   input: {
     flex: 1,
+    fontSize: 16,
+    color: Colors.grey10,
+    paddingVertical: 4,
     ...Typography.text70,
-    color: Colors.text,
-    paddingVertical: 0,
   },
-  
   clearButton: {
-    marginLeft: UI_CONSTANTS.SPACING.sm,
-    padding: UI_CONSTANTS.SPACING.xs,
+    marginLeft: 12,
+    padding: 8,
+    borderRadius: 12,
+    backgroundColor: Colors.grey70,
   },
-  
   clearText: {
-    fontSize: 14,
-    color: Colors.grey30,
+    fontSize: 12,
+    color: Colors.white,
+    fontWeight: '600',
   },
 });

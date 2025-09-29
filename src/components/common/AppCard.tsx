@@ -1,87 +1,40 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, Card, Colors, Typography } from 'react-native-ui-lib';
-import { UI_CONSTANTS } from '@utils/constants';
+import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 
 interface AppCardProps {
   title: string;
-  subtitle?: string;
-  icon?: string;
-  onPress?: () => void;
+  subtitle: string;
+  onPress: () => void;
   style?: any;
-  size?: 'small' | 'medium' | 'large';
-  variant?: 'default' | 'outline' | 'elevated';
+  variant?: 'default' | 'orange' | 'spotify';
 }
 
 export const AppCard: React.FC<AppCardProps> = ({
   title,
   subtitle,
-  icon,
   onPress,
   style,
-  size = 'medium',
   variant = 'default',
 }) => {
-  const cardStyle = [
-    styles.card,
-    styles[`${size}Card`],
-    styles[`${variant}Card`],
-    style,
-  ];
-
-  const content = (
-    <View style={styles.content}>
-      {icon && (
-        <View style={styles.iconContainer}>
-          <Text style={[styles.icon, styles[`${size}Icon`]]}>{icon}</Text>
-        </View>
-      )}
-      
-      <View style={styles.textContainer}>
-        <Text style={[styles.title, styles[`${size}Title`]]} numberOfLines={2}>
-          {title}
-        </Text>
-        
-        {subtitle && (
-          <Text style={[styles.subtitle, styles[`${size}Subtitle`]]} numberOfLines={2}>
-            {subtitle}
-          </Text>
-        )}
+  return (
+    <TouchableOpacity 
+      style={[styles.card, styles[variant], style]} 
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <View>
+        <Text style={[styles.title, styles[`${variant}Title`]]}>{title}</Text>
+        <Text style={[styles.subtitle, styles[`${variant}Subtitle`]]}>{subtitle}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
-
-  if (onPress) {
-    return (
-      <TouchableOpacity style={cardStyle} onPress={onPress} activeOpacity={0.7}>
-        {content}
-      </TouchableOpacity>
-    );
-  }
-
-  return <View style={cardStyle}>{content}</View>;
 };
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: UI_CONSTANTS.CARD_BORDER_RADIUS,
-    padding: UI_CONSTANTS.SPACING.md,
-  },
-  
-  // Size variants
-  smallCard: {
-    padding: UI_CONSTANTS.SPACING.sm,
-  },
-  mediumCard: {
-    padding: UI_CONSTANTS.SPACING.md,
-  },
-  largeCard: {
-    padding: UI_CONSTANTS.SPACING.lg,
-  },
-  
-  // Style variants
-  defaultCard: {
-    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 20,
     shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
@@ -91,77 +44,55 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  outlineCard: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: Colors.grey60,
-  },
-  elevatedCard: {
+  
+  default: {
     backgroundColor: Colors.white,
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: Colors.primary,
   },
   
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  orange: {
+    backgroundColor: '#FF6B35', // Food orange
   },
   
-  iconContainer: {
-    marginRight: UI_CONSTANTS.SPACING.md,
-  },
-  
-  icon: {
-    textAlign: 'center',
-  },
-  
-  smallIcon: {
-    fontSize: 24,
-  },
-  mediumIcon: {
-    fontSize: 32,
-  },
-  largeIcon: {
-    fontSize: 40,
-  },
-  
-  textContainer: {
-    flex: 1,
+  spotify: {
+    backgroundColor: '#1DB954', // Spotify green
   },
   
   title: {
+    ...Typography.text60,
     fontWeight: '600',
-    color: Colors.text,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   
-  smallTitle: {
-    ...Typography.text70,
+  defaultTitle: {
+    color: Colors.grey10,
   },
-  mediumTitle: {
-    ...Typography.text60,
+  
+  orangeTitle: {
+    color: Colors.white,
   },
-  largeTitle: {
-    ...Typography.text50,
+  
+  spotifyTitle: {
+    color: Colors.white,
   },
   
   subtitle: {
+    ...Typography.text80,
+    lineHeight: 18,
+  },
+  
+  defaultSubtitle: {
     color: Colors.grey30,
   },
   
-  smallSubtitle: {
-    ...Typography.text90,
+  orangeSubtitle: {
+    color: Colors.white,
+    opacity: 0.9,
   },
-  mediumSubtitle: {
-    ...Typography.text80,
-  },
-  largeSubtitle: {
-    ...Typography.text70,
+  
+  spotifySubtitle: {
+    color: Colors.white,
+    opacity: 0.9,
   },
 });

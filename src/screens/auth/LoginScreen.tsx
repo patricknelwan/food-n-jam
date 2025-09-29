@@ -1,22 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSpotifyAuth } from '../../hooks/useSpotifyAuth';
-import { useAuth } from '../../hooks/useAuth';
+import { useSpotifyAuth } from '@hooks/useSpotifyAuth';
+import { useAuth } from '@hooks/useAuth';
+import { theme } from '../../theme';
 
 export const LoginScreen: React.FC = () => {
   const { login: spotifyLogin, isLoading, isReady } = useSpotifyAuth();
-  const { login } = useAuth(); // This updates the auth state
+  const { login } = useAuth();
 
   const handleSpotifyLogin = async () => {
     try {
       const result = await spotifyLogin();
       if ('user' in result) {
-        // Success! Now update the auth state
         console.log('Login successful!');
-        await login(); // This will trigger useAuth to refresh and detect the stored user
+        await login();
       } else {
-        // Handle error
         Alert.alert('Login Failed', result.message);
       }
     } catch (error) {
@@ -40,12 +39,15 @@ export const LoginScreen: React.FC = () => {
           </Text>
 
           <TouchableOpacity
-            style={[styles.spotifyButton, (!isReady || isLoading) && styles.disabledButton]}
+            style={[
+              styles.spotifyButton, 
+              (!isReady || isLoading) && styles.disabledButton
+            ]}
             onPress={handleSpotifyLogin}
             disabled={!isReady || isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="white" size="small" />
+              <ActivityIndicator color={theme.colors.textInverse} size="small" />
             ) : (
               <Text style={styles.buttonText}>Continue with Spotify</Text>
             )}
@@ -77,29 +79,29 @@ export const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: theme.spacing['2xl'],
+    paddingVertical: theme.spacing['3xl'],
   },
   header: {
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: theme.spacing['6xl'],
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 16,
+    ...theme.typography.textStyles.h1,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.lg,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
-    color: '#666',
+    ...theme.typography.textStyles.body,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: theme.typography.lineHeight.relaxed,
   },
   loginSection: {
     flex: 1,
@@ -107,43 +109,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginText: {
-    fontSize: 16,
-    color: '#666',
+    ...theme.typography.textStyles.body,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 32,
-    paddingHorizontal: 16,
+    lineHeight: theme.typography.lineHeight.relaxed,
+    marginBottom: theme.spacing['3xl'],
+    paddingHorizontal: theme.spacing.lg,
   },
   spotifyButton: {
-    backgroundColor: '#1DB954', // Spotify green
+    backgroundColor: theme.colors.spotifyGreen,
     height: 56,
-    borderRadius: 8,
+    borderRadius: theme.borderRadius.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 24,
-    minWidth: 250,
+    marginBottom: theme.spacing.lg,
+    paddingHorizontal: theme.spacing['2xl'],
+    minWidth: 280,
+    ...theme.shadows.medium,
   },
   disabledButton: {
     opacity: 0.6,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    ...theme.typography.textStyles.button,
+    color: theme.colors.textInverse,
   },
   loadingText: {
-    fontSize: 14,
-    color: '#999',
+    ...theme.typography.textStyles.caption,
+    color: theme.colors.textTertiary,
     textAlign: 'center',
   },
   footer: {
     alignItems: 'center',
   },
   footerText: {
-    fontSize: 12,
-    color: '#999',
+    ...theme.typography.textStyles.small,
+    color: theme.colors.textTertiary,
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: theme.typography.lineHeight.normal,
   },
 });

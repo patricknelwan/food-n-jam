@@ -1,18 +1,16 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { View, Text, Colors, Typography } from 'react-native-ui-lib';
+import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { AppCard } from '../../components/common/AppCard'; // Fixed relative path
-import { MealCard } from '../../components/meal/MealCard'; // Fixed relative path
-import { LoadingSpinner } from '../../components/common/LoadingSpinner'; // Fixed relative path
-import { useMeals } from '../../hooks/useMeals'; // Fixed relative path
-import { useAuth } from '../../hooks/useAuth'; // Fixed relative path
-import { UI_CONSTANTS } from '../../utils/constants'; // Fixed relative path
+import { AppCard } from '@components/common/AppCard';
+import { MealCard } from '@components/meal/MealCard';
+import { LoadingSpinner } from '@components/common/LoadingSpinner';
+import { useMeals } from '@hooks/useMeals';
+import { useAuth } from '@hooks/useAuth';
+import { theme } from '../../theme';
 
-// Simple navigation type for now
 interface HomeScreenProps {
-  navigation: any; // Temporary - you can refine this later
+  navigation: any;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
@@ -24,18 +22,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [loadFeaturedMeals]);
 
   const handleMealToPlaylist = () => {
-    // For now, just show an alert instead of navigation
-    alert('Meal to Playlist feature - Coming Soon!');
+    navigation.navigate('MealFlow', { screen: 'MealSearch' });
   };
 
   const handlePlaylistToMeal = () => {
-    // For now, just show an alert instead of navigation
-    alert('Playlist to Meal feature - Coming Soon!');
+    navigation.navigate('PlaylistFlow', { screen: 'PlaylistList' });
   };
 
   const handleMealPress = (mealId: string, mealName: string) => {
-    // For now, just show an alert instead of navigation
-    alert(`Would navigate to meal: ${mealName}`);
+    navigation.navigate('MealFlow', { 
+      screen: 'MealDetail',
+      params: { mealId, mealName }
+    });
+  };
+
+  const handleRandomPairing = () => {
+    const randomMeal = featuredMeals[Math.floor(Math.random() * featuredMeals.length)];
+    if (randomMeal) {
+      handleMealPress(randomMeal.id, randomMeal.name);
+    } else {
+      alert('Loading meals... Please try again in a moment!');
+    }
+  };
+
+  const handleViewFavorites = () => {
+    navigation.navigate('Favorites');
   };
 
   return (
@@ -46,25 +57,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text style={styles.greeting}>
             Hello, {user?.display_name || 'Music Lover'}! 👋
           </Text>
-          <Text style={styles.subtitle}>
-            What's Your Vibe Today?
-          </Text>
+          <Text style={styles.subtitle}>What's Your Vibe Today?</Text>
         </View>
 
         {/* Main Action Cards */}
         <View style={styles.actionCards}>
           <AppCard
-            title="🍽️ Meal → Playlist"
-            subtitle="Find perfect music for your meal"
-            icon="🎵"
+            title="Meal → Playlist"
+            subtitle="Find the perfect soundtrack for your meal"
+            icon="🍽️"
             onPress={handleMealToPlaylist}
             style={styles.actionCard}
           />
           
           <AppCard
-            title="🎧 Playlist → Meal"
+            title="Playlist → Meal"
             subtitle="Discover meals that match your music"
-            icon="🍴"
+            icon="🎵"
             onPress={handlePlaylistToMeal}
             style={styles.actionCard}
           />
@@ -73,15 +82,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* Featured Meals Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🔥 Trending Meals</Text>
-          
           {isLoadingFeatured ? (
             <View style={styles.loadingContainer}>
-              <LoadingSpinner message="Loading featured meals..." />
+              <LoadingSpinner />
             </View>
           ) : (
             <ScrollView 
               horizontal 
-              showsHorizontalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false} 
               contentContainerStyle={styles.horizontalScroll}
             >
               {featuredMeals.map((meal) => (
@@ -99,24 +107,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* Quick Actions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>⚡ Quick Actions</Text>
-          
           <View style={styles.quickActions}>
             <AppCard
-              title="🎲 Surprise Me"
-              subtitle="Random pairing"
-              icon="✨"
-              onPress={() => {
-                // TODO: Implement random pairing
-                alert('Random pairing - Coming Soon!');
-              }}
+              title="Surprise Me!"
+              subtitle="Random meal + playlist combo"
+              icon="🎲"
+              onPress={handleRandomPairing}
               style={styles.quickActionCard}
             />
             
             <AppCard
-              title="❤️ My Favorites"
-              subtitle="Saved pairings"
-              icon="📱"
-              onPress={() => navigation?.navigate('Favorites')}
+              title="My Favorites"
+              subtitle="Your saved pairings"
+              icon="❤️"
+              onPress={handleViewFavorites}
               style={styles.quickActionCard}
             />
           </View>
@@ -129,70 +133,56 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.grey80,
+    backgroundColor: theme.colors.background,
   },
-  
   header: {
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
-    paddingTop: UI_CONSTANTS.SPACING.xl,
-    paddingBottom: UI_CONSTANTS.SPACING.md,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.xl,
+    paddingBottom: theme.spacing.md,
   },
-  
   greeting: {
-    ...Typography.text40,
-    fontWeight: 'bold',
-    color: Colors.text,
-    marginBottom: UI_CONSTANTS.SPACING.xs,
+    ...theme.typography.textStyles.h2,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
   },
-  
   subtitle: {
-    ...Typography.text60,
-    color: Colors.grey30,
+    ...theme.typography.textStyles.body,
+    color: theme.colors.textSecondary,
   },
-  
   actionCards: {
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
-    gap: UI_CONSTANTS.SPACING.md,
-    marginBottom: UI_CONSTANTS.SPACING.lg,
+    paddingHorizontal: theme.spacing.lg,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
-  
   actionCard: {
-    marginBottom: UI_CONSTANTS.SPACING.sm,
+    marginBottom: theme.spacing.sm,
   },
-  
   section: {
-    marginBottom: UI_CONSTANTS.SPACING.xl,
+    marginBottom: theme.spacing.xl,
   },
-  
   sectionTitle: {
-    ...Typography.text50,
-    fontWeight: '600',
-    color: Colors.text,
-    marginBottom: UI_CONSTANTS.SPACING.md,
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
+    ...theme.typography.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
   },
-  
   loadingContainer: {
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
   horizontalScroll: {
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
-    gap: UI_CONSTANTS.SPACING.md,
+    paddingHorizontal: theme.spacing.lg,
+    gap: theme.spacing.md,
   },
-  
   featuredMealCard: {
     width: 160,
   },
-  
   quickActions: {
     flexDirection: 'row',
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
-    gap: UI_CONSTANTS.SPACING.md,
+    paddingHorizontal: theme.spacing.lg,
+    gap: theme.spacing.md,
   },
-  
   quickActionCard: {
     flex: 1,
   },

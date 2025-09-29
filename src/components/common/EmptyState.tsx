@@ -1,23 +1,22 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { View, Text, Colors, Typography } from 'react-native-ui-lib';
+import { View, Text, StyleSheet } from 'react-native';
 import { AppButton } from './AppButton';
-import { UI_CONSTANTS } from '@utils/constants';
+import { theme } from '../../theme';
 
 interface EmptyStateProps {
-  icon?: string;
   title: string;
   message: string;
   actionLabel?: string;
   onAction?: () => void;
+  icon?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon = '🔍',
   title,
   message,
   actionLabel,
   onAction,
+  icon = '🔍',
 }) => {
   return (
     <View style={styles.container}>
@@ -29,8 +28,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <AppButton
           label={actionLabel}
           onPress={onAction}
-          style={styles.button}
-          size="medium"
+          variant="outline"
+          style={styles.action}
         />
       )}
     </View>
@@ -42,27 +41,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: UI_CONSTANTS.SPACING.xl,
+    paddingHorizontal: theme.spacing['2xl'],
   },
   icon: {
     fontSize: 64,
-    marginBottom: UI_CONSTANTS.SPACING.lg,
+    marginBottom: theme.spacing.lg,
   },
   title: {
-    ...Typography.text50,
-    fontWeight: '600',
-    color: Colors.text,
+    ...theme.typography.textStyles.h3,
+    color: theme.colors.textPrimary,
     textAlign: 'center',
-    marginBottom: UI_CONSTANTS.SPACING.sm,
+    marginBottom: theme.spacing.md,
   },
   message: {
-    ...Typography.text70,
-    color: Colors.grey30,
+    ...theme.typography.textStyles.body,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: UI_CONSTANTS.SPACING.lg,
+    lineHeight: theme.typography.lineHeight.relaxed,
+    marginBottom: theme.spacing.xl,
   },
-  button: {
-    minWidth: 120,
+  action: {
+    marginTop: theme.spacing.md,
   },
 });

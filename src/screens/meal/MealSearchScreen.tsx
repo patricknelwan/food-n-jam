@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
-import { View, Text, Colors } from 'react-native-ui-lib';
+import { StyleSheet, FlatList, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { MealSearchBar } from '@components/meal/MealSearchBar';
@@ -8,16 +7,18 @@ import { MealCard } from '@components/meal/MealCard';
 import { EmptyState } from '@components/common/EmptyState';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useMeals } from '@hooks/useMeals';
-import { UI_CONSTANTS } from '@utils/constants';
-import type { MealStackScreenProps } from '../../navigation/types';
+import { theme } from '../../theme';
+import type { StackNavigationProp } from '@react-navigation/stack';
 
-type MealSearchScreenProps = MealStackScreenProps<'MealSearch'>;
+// Define the navigation prop type for MealFlow stack
+type MealFlowNavigationProp = StackNavigationProp<any, 'MealSearch'>;
 
-export const MealSearchScreen: React.FC<MealSearchScreenProps> = () => {
-  const navigation = useNavigation<MealSearchScreenProps['navigation']>();
+export const MealSearchScreen: React.FC = () => {
+  const navigation = useNavigation<MealFlowNavigationProp>();
   const { searchState, searchMeals, clearSearch } = useMeals();
 
   const handleMealPress = (mealId: string, mealName: string) => {
+    // Navigate within the MealFlow stack
     navigation.navigate('MealDetail', { mealId, mealName });
   };
 
@@ -32,13 +33,12 @@ export const MealSearchScreen: React.FC<MealSearchScreenProps> = () => {
 
   const renderEmptyState = () => {
     if (searchState.isLoading) {
-      return <LoadingSpinner message="Searching for meals..." />;
+      return <LoadingSpinner />;
     }
 
     if (searchState.error) {
       return (
         <EmptyState
-          icon="⚠️"
           title="Search Error"
           message={searchState.error}
           actionLabel="Try Again"
@@ -50,9 +50,8 @@ export const MealSearchScreen: React.FC<MealSearchScreenProps> = () => {
     if (searchState.hasSearched && searchState.results.length === 0) {
       return (
         <EmptyState
-          icon="🔍"
-          title="No Meals Found"
-          message={`No meals found for "${searchState.query}". Try a different search term.`}
+          title="No meals found"
+          message="Try searching with different keywords"
           actionLabel="Clear Search"
           onAction={clearSearch}
         />
@@ -61,28 +60,24 @@ export const MealSearchScreen: React.FC<MealSearchScreenProps> = () => {
 
     return (
       <EmptyState
-        icon="🍽️"
-        title="Search for Meals"
-        message="Start typing to search for delicious meals and discover perfect music pairings!"
+        title="Find Your Perfect Meal"
+        message="Search for meals by name, ingredient, or cuisine type"
+        icon="🔍"
       />
     );
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Find Your Perfect Meal</Text>
-        <MealSearchBar
-          onSearch={searchMeals}
-          onClear={clearSearch}
-          autoFocus={true}
-        />
+        <MealSearchBar onSearch={searchMeals} />
       </View>
-
+      
       <FlatList
         data={searchState.results}
         renderItem={renderMealItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={renderEmptyState}
@@ -95,40 +90,27 @@ export const MealSearchScreen: React.FC<MealSearchScreenProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.grey80,
+    backgroundColor: theme.colors.background,
   },
-  
   header: {
-    paddingHorizontal: UI_CONSTANTS.SPACING.lg,
-    paddingVertical: UI_CONSTANTS.SPACING.md,
-    backgroundColor: Colors.white,
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    backgroundColor: theme.colors.surface,
+    ...theme.shadows.small,
   },
-  
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text,
-    marginBottom: UI_CONSTANTS.SPACING.md,
+    ...theme.typography.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.md,
   },
-  
   listContainer: {
-    padding: UI_CONSTANTS.SPACING.lg,
+    padding: theme.spacing.lg,
     flexGrow: 1,
   },
-  
   mealCard: {
-    marginBottom: UI_CONSTANTS.SPACING.md,
+    marginBottom: theme.spacing.md,
   },
-  
   separator: {
-    height: UI_CONSTANTS.SPACING.sm,
+    height: theme.spacing.sm,
   },
 });

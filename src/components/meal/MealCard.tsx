@@ -1,63 +1,43 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { View, Text, Colors, Typography } from 'react-native-ui-lib';
-import type { Meal } from '../../types/meal';
-import { UI_CONSTANTS } from '@utils/constants';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { theme } from '../../theme';
 
 interface MealCardProps {
-  meal: Meal;
+  meal: {
+    id: string;
+    name: string;
+    image?: string;
+    category?: string;
+  };
   onPress: () => void;
-  style?: any;
   size?: 'small' | 'medium' | 'large';
+  style?: any;
 }
 
-export const MealCard: React.FC<MealCardProps> = ({
-  meal,
-  onPress,
-  style,
+export const MealCard: React.FC<MealCardProps> = ({ 
+  meal, 
+  onPress, 
   size = 'medium',
+  style 
 }) => {
   return (
-    <TouchableOpacity
-      style={[styles.card, styles[`${size}Card`], style]}
-      onPress={onPress}
+    <TouchableOpacity 
+      style={[styles.card, styles[size], style]} 
+      onPress={onPress} 
       activeOpacity={0.8}
     >
-      <Image
-        source={{ uri: meal.image }}
+      <Image 
+        source={{ uri: meal.image || 'https://via.placeholder.com/150' }}
         style={[styles.image, styles[`${size}Image`]]}
-        resizeMode="cover"
       />
-      
       <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={[styles.title, styles[`${size}Title`]]} numberOfLines={2}>
-            {meal.name}
+        <Text style={[styles.name, styles[`${size}Name`]]} numberOfLines={2}>
+          {meal.name}
+        </Text>
+        {meal.category && (
+          <Text style={[styles.category, styles[`${size}Category`]]}>
+            {meal.category}
           </Text>
-          
-          <View style={styles.badges}>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{meal.cuisine}</Text>
-            </View>
-            
-            {meal.category && (
-              <View style={[styles.badge, styles.categoryBadge]}>
-                <Text style={[styles.badgeText, styles.categoryBadgeText]}>
-                  {meal.category}
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-        
-        {meal.tags.length > 0 && (
-          <View style={styles.tags}>
-            {meal.tags.slice(0, 2).map((tag, index) => (
-              <Text key={index} style={styles.tag}>
-                #{tag}
-              </Text>
-            ))}
-          </View>
         )}
       </View>
     </TouchableOpacity>
@@ -66,103 +46,84 @@ export const MealCard: React.FC<MealCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.white,
-    borderRadius: UI_CONSTANTS.CARD_BORDER_RADIUS,
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    ...theme.shadows.medium,
   },
   
-  smallCard: {
+  // Base sizes
+  small: {
+    padding: theme.spacing.sm,
     width: 140,
   },
-  mediumCard: {
+  medium: {
+    padding: theme.spacing.md,
     width: 160,
   },
-  largeCard: {
-    width: '100%',
+  large: {
+    padding: theme.spacing.md,
+    // Full width for large cards in lists
   },
   
+  // Base image
   image: {
-    backgroundColor: Colors.grey70,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing.sm,
+    backgroundColor: theme.colors.gray100,
   },
   
+  // Image sizes
   smallImage: {
-    height: 100,
+    width: '100%',
+    height: 80,
   },
   mediumImage: {
+    width: '100%',
     height: 120,
   },
   largeImage: {
-    height: 200,
+    width: '100%',
+    height: 160,
   },
   
   content: {
-    padding: UI_CONSTANTS.SPACING.md,
+    paddingHorizontal: theme.spacing.xs,
   },
   
-  header: {
-    marginBottom: UI_CONSTANTS.SPACING.sm,
+  // Base name styles
+  name: {
+    fontWeight: theme.typography.fontWeight.semibold,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
   },
   
-  title: {
-    fontWeight: '600',
-    color: Colors.text,
-    marginBottom: UI_CONSTANTS.SPACING.xs,
+  // Name sizes
+  smallName: {
+    fontSize: theme.typography.fontSize.sm,
+    lineHeight: theme.typography.fontSize.sm * 1.3,
+  },
+  mediumName: {
+    fontSize: theme.typography.fontSize.base,
+    lineHeight: theme.typography.fontSize.base * 1.4,
+  },
+  largeName: {
+    fontSize: theme.typography.fontSize.lg,
+    lineHeight: theme.typography.fontSize.lg * 1.4,
   },
   
-  smallTitle: {
-    ...Typography.text80,
-  },
-  mediumTitle: {
-    ...Typography.text70,
-  },
-  largeTitle: {
-    ...Typography.text60,
+  // Base category styles
+  category: {
+    color: theme.colors.textSecondary,
   },
   
-  badges: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: UI_CONSTANTS.SPACING.xs,
+  // Category sizes
+  smallCategory: {
+    fontSize: theme.typography.fontSize.xs,
   },
-  
-  badge: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: UI_CONSTANTS.SPACING.xs,
-    paddingVertical: 2,
-    borderRadius: 4,
+  mediumCategory: {
+    fontSize: theme.typography.fontSize.sm,
   },
-  
-  categoryBadge: {
-    backgroundColor: Colors.grey60,
-  },
-  
-  badgeText: {
-    ...Typography.text90,
-    color: Colors.white,
-    fontWeight: '500',
-  },
-  
-  categoryBadgeText: {
-    color: Colors.white,
-  },
-  
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: UI_CONSTANTS.SPACING.xs,
-  },
-  
-  tag: {
-    ...Typography.text90,
-    color: Colors.grey20,
-    fontStyle: 'italic',
+  largeCategory: {
+    fontSize: theme.typography.fontSize.sm,
   },
 });

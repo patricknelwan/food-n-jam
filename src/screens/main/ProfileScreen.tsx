@@ -5,7 +5,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AppButton } from '@components/common/AppButton';
 import { AppCard } from '@components/common/AppCard';
 import { StatCard } from '@components/common/StatCard';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import { useFavorites } from '@hooks/useFavorites';
 import { UI_CONSTANTS, APP_CONFIG } from '@utils/constants';
 import type { MainTabScreenProps } from '../../navigation/types';
@@ -17,6 +17,7 @@ export const ProfileScreen: React.FC = () => {
   const { stats } = useFavorites();
   const insets = useSafeAreaInsets(); // Add this for dynamic padding
 
+  // In your ProfileScreen.tsx, update the handleLogout function:
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -26,7 +27,11 @@ export const ProfileScreen: React.FC = () => {
         {
           text: 'Logout',
           style: 'destructive',
-          onPress: logout
+          onPress: async () => {
+            console.log('🔄 Profile: Starting logout process...');
+            await logout(); // This should trigger navigation to login screen
+            console.log('✅ Profile: Logout completed');
+          }
         },
       ]
     );

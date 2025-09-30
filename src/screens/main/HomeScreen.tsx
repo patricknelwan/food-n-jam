@@ -7,7 +7,7 @@ import { AppCard } from '@components/common/AppCard';
 import { MealCard } from '@components/meal/MealCard';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useMeals } from '@hooks/useMeals';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import { UI_CONSTANTS } from '@utils/constants';
 
 interface HomeScreenProps {

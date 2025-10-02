@@ -1,4 +1,5 @@
 import { supabase } from '@services/api/supabase';
+import { authService } from '@services/auth/AuthService';
 import type { SavedPairing } from '../../types/pairing';
 import type { ApiResponse } from '../../types';
 
@@ -15,16 +16,26 @@ export interface CreatePairingData {
 class FavoritesService {
   // Save a new pairing
   async savePairing(pairingData: CreatePairingData): Promise<ApiResponse<SavedPairing>> {
+    console.log('===== FavoritesService.savePairing =====');
+    console.log('DEBUG FavoritesService: Saving pairing:', pairingData);
+    
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      console.log('DEBUG FavoritesService: Getting stored user...');
+      const user = await authService.getStoredUser();
+      
+      console.log('DEBUG FavoritesService: User result:', user);
       
       if (!user) {
+        console.error('DEBUG FavoritesService: No user found!');
         return {
           data: {} as SavedPairing,
           error: 'User not authenticated',
           status: 'error'
         };
       }
+
+      console.log('DEBUG FavoritesService: User ID:', user.id);
+      console.log('DEBUG FavoritesService: Inserting into Supabase...');
 
       const { data, error } = await supabase
         .from('pairings')
@@ -41,15 +52,23 @@ class FavoritesService {
         .select()
         .single();
 
+      console.log('DEBUG FavoritesService: Supabase insert result:');
+      console.log('DEBUG FavoritesService: data:', data);
+      console.log('DEBUG FavoritesService: error:', error);
+
       if (error) {
+        console.error('DEBUG FavoritesService: Supabase error:', error);
         throw error;
       }
 
+      console.log('DEBUG FavoritesService: Success!');
       return {
         data: data as SavedPairing,
         status: 'success'
       };
     } catch (error) {
+      console.error('===== FavoritesService.savePairing ERROR =====');
+      console.error('DEBUG FavoritesService: Exception:', error);
       return {
         data: {} as SavedPairing,
         error: error instanceof Error ? error.message : 'Failed to save pairing',
@@ -61,7 +80,7 @@ class FavoritesService {
   // Get all saved pairings for the current user
   async getUserPairings(): Promise<ApiResponse<SavedPairing[]>> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getStoredUser();
       
       if (!user) {
         return {
@@ -97,7 +116,7 @@ class FavoritesService {
   // Delete a pairing
   async deletePairing(pairingId: string): Promise<ApiResponse<boolean>> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getStoredUser();
       
       if (!user) {
         return {
@@ -111,7 +130,7 @@ class FavoritesService {
         .from('pairings')
         .delete()
         .eq('id', pairingId)
-        .eq('user_id', user.id); // Ensure user can only delete their own pairings
+        .eq('user_id', user.id);
 
       if (error) {
         throw error;
@@ -133,7 +152,7 @@ class FavoritesService {
   // Check if a pairing already exists
   async checkPairingExists(mealName: string, playlistId: string): Promise<ApiResponse<boolean>> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getStoredUser();
       
       if (!user) {
         return {
@@ -168,14 +187,9 @@ class FavoritesService {
   }
 
   // Get pairing statistics for the user
-  async getUserStats(): Promise<ApiResponse<{
-    totalPairings: number;
-    uniqueMeals: number;
-    uniquePlaylists: number;
-    topCuisine: string | null;
-  }>> {
+  async getUserStats(): Promise<ApiResponse<any>> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getStoredUser();
       
       if (!user) {
         return {
@@ -189,7 +203,6 @@ class FavoritesService {
         };
       }
 
-      // Get all pairings for stats calculation
       const { data: pairings, error } = await supabase
         .from('pairings')
         .select('meal_name, playlist_id, cuisine')
@@ -201,13 +214,12 @@ class FavoritesService {
 
       const uniqueMeals = new Set(pairings.map(p => p.meal_name)).size;
       const uniquePlaylists = new Set(pairings.map(p => p.playlist_id)).size;
-      
-      // Calculate top cuisine
+
       const cuisineCounts: Record<string, number> = {};
       pairings.forEach(p => {
         cuisineCounts[p.cuisine] = (cuisineCounts[p.cuisine] || 0) + 1;
       });
-      
+
       const topCuisine = Object.keys(cuisineCounts).length > 0
         ? Object.entries(cuisineCounts).reduce((a, b) => a[1] > b[1] ? a : b)[0]
         : null;

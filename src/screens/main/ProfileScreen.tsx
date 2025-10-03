@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, ScrollView, Alert } from 'react-native';
 import { View, Text, Colors, Typography, Avatar } from 'react-native-ui-lib';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { AppButton } from '@components/common/AppButton';
 import { AppCard } from '@components/common/AppCard';
 import { StatCard } from '@components/common/StatCard';
@@ -14,10 +15,16 @@ type ProfileScreenProps = MainTabScreenProps<'Profile'>;
 
 export const ProfileScreen: React.FC = () => {
   const { user, logout } = useAuth();
-  const { stats } = useFavorites();
-  const insets = useSafeAreaInsets(); // Add this for dynamic padding
+  const { stats, loadStats } = useFavorites();
+  const insets = useSafeAreaInsets();
 
-  // In your ProfileScreen.tsx, update the handleLogout function:
+  // Refresh stats whenever the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadStats();
+    }, [loadStats])
+  );
+
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -29,7 +36,7 @@ export const ProfileScreen: React.FC = () => {
           style: 'destructive',
           onPress: async () => {
             console.log('🔄 Profile: Starting logout process...');
-            await logout(); // This should trigger navigation to login screen
+            await logout();
             console.log('✅ Profile: Logout completed');
           }
         },
@@ -63,7 +70,6 @@ export const ProfileScreen: React.FC = () => {
       [
         { text: 'Cancel' },
         { text: 'Email Us', onPress: () => {
-          // TODO: Implement email feedback
           Alert.alert('Coming Soon', 'Email feedback will be available in a future update!');
         }}
       ]
@@ -79,29 +85,17 @@ export const ProfileScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: insets.bottom + 100 } // Dynamic bottom padding
-        ]}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Profile Header */}
         <View style={styles.header}>
           <View style={styles.profileInfo}>
             <Avatar
-              size={80}
               source={{ uri: user?.avatar_url }}
-              backgroundColor={Colors.primary}
+              size={70}
               label={user?.display_name?.[0] || 'U'}
             />
             <View style={styles.userInfo}>
-              <Text style={styles.displayName}>
-                {user?.display_name || 'Music Lover'}
-              </Text>
-              {/* <Text style={styles.email}>
-                {user?.email || 'Connected via Spotify'}
-              </Text> */}
+              <Text style={styles.displayName}>{user?.display_name || 'Music Lover'}</Text>
               <Text style={styles.memberSince}>
                 Member since {formatMemberSince(user?.created_at || new Date().toISOString())}
               </Text>
@@ -117,20 +111,22 @@ export const ProfileScreen: React.FC = () => {
               title={stats.totalPairings.toString()}
               subtitle="Total Pairings"
               style={styles.statCard}
-              variant="success" // Green background
             />
             <StatCard
-              title={stats.uniqueMeals?.toString() || '0'}
+              title={stats.uniqueMeals.toString()}
               subtitle="Unique Meals"
               style={styles.statCard}
-              variant="orange" // Orange background
+            />
+            <StatCard
+              title={stats.uniquePlaylists.toString()}
+              subtitle="Playlists"
+              style={styles.statCard}
             />
             {stats.topCuisine && (
               <StatCard
                 title={stats.topCuisine}
-                subtitle="Favorite Cuisine"
+                subtitle="Top Cuisine"
                 style={styles.statCard}
-                variant="default" // White with colored border
               />
             )}
           </View>
@@ -150,20 +146,20 @@ export const ProfileScreen: React.FC = () => {
           <View style={styles.settingsList}>
             <AppCard
               title="Spotify Connection"
-              subtitle="Manage your connected Spotify account"
+              subtitle={`Connected as ${user?.display_name || 'Unknown'}`}
               onPress={handleSpotifySettings}
               style={styles.settingCard}
             />
             <AppCard
-              title="Send Feedback"
-              subtitle="Help us improve the app"
-              onPress={handleFeedback}
+              title="About"
+              subtitle="Learn more about Meal & Music Pairing"
+              onPress={handleAbout}
               style={styles.settingCard}
             />
             <AppCard
-              title="About"
-              subtitle="App version and information"
-              onPress={handleAbout}
+              title="Send Feedback"
+              subtitle="Help us improve your experience"
+              onPress={handleFeedback}
               style={styles.settingCard}
             />
           </View>
@@ -185,7 +181,7 @@ export const ProfileScreen: React.FC = () => {
                   </View>
                 </View>
               )}
-              
+
               {stats.totalPairings >= 5 && (
                 <View style={styles.achievement}>
                   <View style={styles.achievementIconContainer}>
@@ -197,7 +193,7 @@ export const ProfileScreen: React.FC = () => {
                   </View>
                 </View>
               )}
-              
+
               {stats.totalPairings >= 10 && (
                 <View style={styles.achievement}>
                   <View style={styles.achievementIconContainer}>
@@ -209,7 +205,7 @@ export const ProfileScreen: React.FC = () => {
                   </View>
                 </View>
               )}
-              
+
               {stats.uniqueMeals >= 10 && (
                 <View style={styles.achievement}>
                   <View style={styles.achievementIconContainer}>
@@ -231,6 +227,7 @@ export const ProfileScreen: React.FC = () => {
             label="Logout"
             onPress={handleLogout}
             variant="outline"
+            size="large"
             style={styles.logoutButton}
           />
         </View>

@@ -172,51 +172,35 @@ class AuthService {
       country: spotifyUser.country || null,
       followers_count: spotifyUser.followers?.total || 0,
       premium: spotifyUser.product === 'premium',
+      updated_at: new Date().toISOString(),
     };
 
-    console.log('🔄 Creating/updating user with simple approach:', userData);
+    console.log('🔄 Upserting user:', userData);
 
     try {
-      // Method 1: Try simple insert first
-      console.log('🔄 Attempting insert...');
-      const { data: insertedUser, error: insertError } = await supabase
+      // Use upsert instead of insert/update separately
+      const { data: user, error } = await supabase
         .from('users')
-        .insert(userData)
-        .select()
-        .single();
-
-      if (!insertError && insertedUser) {
-        console.log('✅ User created successfully:', insertedUser.display_name);
-        return insertedUser;
-      }
-
-      console.log('🔄 Insert failed, trying update. Insert error:', insertError);
-
-      // Method 2: Insert failed, try update
-      const { data: updatedUser, error: updateError } = await supabase
-        .from('users')
-        .update({
-          ...userData,
-          updated_at: new Date().toISOString(),
+        .upsert(userData, {
+          onConflict: 'spotify_id', // Conflict resolution on spotify_id
+          ignoreDuplicates: false    // Always update on conflict
         })
-        .eq('spotify_id', userData.spotify_id)
         .select()
         .single();
 
-      if (updateError) {
-        console.error('❌ Update also failed:', updateError);
-        throw new Error(`Both insert and update failed. Insert: ${insertError?.message}, Update: ${updateError.message}`);
+      if (error) {
+        console.error('❌ Upsert failed:', error);
+        throw new Error(`Failed to create/update user: ${error.message}`);
       }
 
-      if (!updatedUser) {
-        throw new Error('Update completed but no user data returned');
+      if (!user) {
+        throw new Error('Upsert completed but no user data returned');
       }
 
-      console.log('✅ User updated successfully:', updatedUser.display_name);
-      return updatedUser;
-
+      console.log('✅ User upserted successfully:', user.display_name);
+      return user;
     } catch (error) {
-      console.error('❌ Complete operation failed:', error);
+      console.error('❌ User upsert operation failed:', error);
       throw error;
     }
   }

@@ -14,34 +14,6 @@ Food n' Jam connects your culinary experiences with your musical taste. Discover
 - **Personal Collection**: Keep track of your favorite meal-music pairings
 - **User Profiles**: Manage your account and view your activity
 
-## Screenshots
-
-<!-- Add your app screenshots here -->
-<div align="center">
-  
-### Login & Authentication
-<!-- ![Login Screen](screenshots/login.png) -->
-*Connect your Spotify account to get started*
-
-### Home & Discovery
-<!-- ![Home Screen](screenshots/home.png) -->
-*Browse featured meals and discover new food-music pairings*
-
-### Meal Search
-<!-- ![Search Screen](screenshots/search.png) -->
-*Find specific meals and ingredients*
-
-### Playlist Integration
-<!-- ![Playlist Screen](screenshots/playlists.png) -->
-*Access your Spotify playlists and create perfect pairings*
-
-### Favorites & Profile
-<!-- ![Favorites Screen](screenshots/favorites.png) -->
-<!-- ![Profile Screen](screenshots/profile.png) -->
-*Keep track of your saved pairings and manage your account*
-
-</div>
-
 ## Tech Stack
 
 - **Frontend**: React Native, TypeScript, Expo

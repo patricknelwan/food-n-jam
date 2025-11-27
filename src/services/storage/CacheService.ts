@@ -30,14 +30,14 @@ class CacheService {
   async get<T>(key: string): Promise<T | null> {
     try {
       const cachedData = await AsyncStorage.getItem(key);
-      
+
       if (!cachedData) {
         return null;
       }
 
       const cacheItem: CacheItem<T> = JSON.parse(cachedData);
       const now = Date.now();
-      
+
       // Check if expired
       if (now - cacheItem.timestamp > cacheItem.expiresIn) {
         await this.remove(key);
@@ -64,7 +64,7 @@ class CacheService {
   async clear(): Promise<void> {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const cacheKeys = keys.filter(key => key.startsWith('cache_'));
+      const cacheKeys = keys.filter((key) => key.startsWith('cache_'));
       await AsyncStorage.multiRemove(cacheKeys);
     } catch (error) {
       console.error('Failed to clear cache:', error);
@@ -81,7 +81,7 @@ class CacheService {
   async getAge(key: string): Promise<number | null> {
     try {
       const cachedData = await AsyncStorage.getItem(key);
-      
+
       if (!cachedData) {
         return null;
       }
@@ -144,19 +144,20 @@ class CacheService {
   }> {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const cacheKeys = keys.filter(key => key.startsWith('cache_') || 
-        Object.values(STORAGE_KEYS).some(storageKey => key.startsWith(storageKey)));
+      const cacheKeys = keys.filter(
+        (key) =>
+          key.startsWith('cache_') ||
+          Object.values(STORAGE_KEYS).some((storageKey) => key.startsWith(storageKey))
+      );
 
       if (cacheKeys.length === 0) {
         return { totalItems: 0, oldestItem: null, newestItem: null };
       }
 
-      const ages = await Promise.all(
-        cacheKeys.map(key => this.getAge(key))
-      );
+      const ages = await Promise.all(cacheKeys.map((key) => this.getAge(key)));
 
-      const validAges = ages.filter(age => age !== null) as number[];
-      
+      const validAges = ages.filter((age) => age !== null) as number[];
+
       return {
         totalItems: cacheKeys.length,
         oldestItem: validAges.length > 0 ? Math.max(...validAges) : null,
@@ -172,8 +173,11 @@ class CacheService {
   async cleanExpired(): Promise<number> {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const cacheKeys = keys.filter(key => key.startsWith('cache_') || 
-        Object.values(STORAGE_KEYS).some(storageKey => key.startsWith(storageKey)));
+      const cacheKeys = keys.filter(
+        (key) =>
+          key.startsWith('cache_') ||
+          Object.values(STORAGE_KEYS).some((storageKey) => key.startsWith(storageKey))
+      );
 
       let cleanedCount = 0;
 

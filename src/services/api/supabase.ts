@@ -1,8 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import {
-  EXPO_PUBLIC_SUPABASE_URL,
-  EXPO_PUBLIC_SUPABASE_ANON_KEY,
-} from '@env';
+import { EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY } from '@env';
 
 // Debug: Log the environment variables (remove after testing)
 console.log('🔧 Supabase Environment Check:');
@@ -13,24 +10,20 @@ if (!EXPO_PUBLIC_SUPABASE_URL || !EXPO_PUBLIC_SUPABASE_ANON_KEY) {
   throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
-export const supabase = createClient(
-  EXPO_PUBLIC_SUPABASE_URL,
-  EXPO_PUBLIC_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      storage: undefined, // We'll use expo-secure-store
-      autoRefreshToken: false, // We handle auth manually
-      persistSession: false, // We handle sessions manually  
-      detectSessionInUrl: false,
+export const supabase = createClient(EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY, {
+  auth: {
+    storage: undefined, // We'll use expo-secure-store
+    autoRefreshToken: false, // We handle auth manually
+    persistSession: false, // We handle sessions manually
+    detectSessionInUrl: false,
+  },
+  global: {
+    headers: {
+      apikey: EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
     },
-    global: {
-      headers: {
-        'apikey': EXPO_PUBLIC_SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
-      },
-    },
-  }
-);
+  },
+});
 
 // Database types (same as before)
 export interface Database {

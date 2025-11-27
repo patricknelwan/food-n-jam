@@ -18,7 +18,7 @@ export const useAuth = () => {
       console.log('🔄 useAuth: Checking stored data...');
       const storedTokens = await authService.getStoredTokens();
       const storedUser = await authService.getStoredUser();
-      
+
       console.log('🔍 useAuth: storedTokens:', !!storedTokens);
       console.log('🔍 useAuth: storedUser:', !!storedUser);
       console.log('🔍 useAuth: user details:', storedUser?.display_name);
@@ -80,19 +80,19 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       console.log('🔄 useAuth: Starting logout...');
-      
+
       // Clear data from AuthService
       await authService.logout();
-      
+
       // Clear local state
       setUser(null);
       setTokens(null);
       setError(null);
-      
+
       // Set auth state to unauthenticated
       console.log('✅ useAuth: Setting unauthenticated state');
       setAuthState('unauthenticated');
-      
+
       console.log('🎉 useAuth: Logout completed successfully');
     } catch (error) {
       console.error('❌ useAuth: Logout error:', error);

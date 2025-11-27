@@ -5,11 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.patricknelwan.foodnjam",
@@ -29,10 +25,7 @@
     "web": {
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-asset",
-      "expo-font"
-    ],
+    "plugins": ["expo-asset", "expo-font"],
     "extra": {
       "eas": {
         "projectId": "1d48e2e6-7888-4299-a521-d568c946cab1"

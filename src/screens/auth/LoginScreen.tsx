@@ -28,24 +28,19 @@ export const LoginScreen: React.FC = () => {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Food n' Jam</Text>
-          <Text style={styles.subtitle}>
-            Discover the perfect meal for your music taste
-          </Text>
+          <Text style={styles.subtitle}>Discover the perfect meal for your music taste</Text>
         </View>
 
         <View style={styles.loginSection}>
           <Text style={styles.loginText}>
-            Connect your Spotify account to get personalized meal recommendations based on your music preferences
+            Connect your Spotify account to get personalized meal recommendations based on your
+            music preferences
           </Text>
 
           <TouchableOpacity
-            style={[
-              styles.spotifyButton, 
-              (!isReady || isLoading) && styles.disabledButton
-            ]}
+            style={[styles.spotifyButton, (!isReady || isLoading) && styles.disabledButton]}
             onPress={handleSpotifyLogin}
-            disabled={!isReady || isLoading}
-          >
+            disabled={!isReady || isLoading}>
             {isLoading ? (
               <ActivityIndicator color={Colors.white} size="small" />
             ) : (
@@ -53,22 +48,15 @@ export const LoginScreen: React.FC = () => {
             )}
           </TouchableOpacity>
 
-          {!isReady && (
-            <Text style={styles.loadingText}>
-              Preparing Spotify authentication...
-            </Text>
-          )}
+          {!isReady && <Text style={styles.loadingText}>Preparing Spotify authentication...</Text>}
 
-          {isLoading && (
-            <Text style={styles.loadingText}>
-              Logging in...
-            </Text>
-          )}
+          {isLoading && <Text style={styles.loadingText}>Logging in...</Text>}
         </View>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            By continuing, you agree to connect your Spotify account to discover music-inspired meals
+            By continuing, you agree to connect your Spotify account to discover music-inspired
+            meals
           </Text>
         </View>
       </View>

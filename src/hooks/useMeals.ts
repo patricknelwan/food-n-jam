@@ -17,29 +17,29 @@ export const useMeals = () => {
   // Search meals by name
   const searchMeals = useCallback(async (query: string) => {
     if (!query.trim()) {
-      setSearchState(prev => ({ ...prev, query: '', results: [], hasSearched: false }));
+      setSearchState((prev) => ({ ...prev, query: '', results: [], hasSearched: false }));
       return;
     }
 
-    setSearchState(prev => ({ 
-      ...prev, 
-      isLoading: true, 
-      error: null, 
-      query: query.trim() 
+    setSearchState((prev) => ({
+      ...prev,
+      isLoading: true,
+      error: null,
+      query: query.trim(),
     }));
 
     try {
       const result = await mealDBService.searchMealsByName(query.trim());
-      
+
       if (result.status === 'success') {
-        setSearchState(prev => ({
+        setSearchState((prev) => ({
           ...prev,
           results: result.data,
           isLoading: false,
           hasSearched: true,
         }));
       } else {
-        setSearchState(prev => ({
+        setSearchState((prev) => ({
           ...prev,
           error: result.error || 'Search failed',
           isLoading: false,
@@ -47,7 +47,7 @@ export const useMeals = () => {
         }));
       }
     } catch (error) {
-      setSearchState(prev => ({
+      setSearchState((prev) => ({
         ...prev,
         error: 'Network error occurred',
         isLoading: false,
@@ -69,15 +69,17 @@ export const useMeals = () => {
   // Load featured/random meals for home screen
   const loadFeaturedMeals = useCallback(async () => {
     setIsLoadingFeatured(true);
-    
+
     try {
       // Get multiple random meals
-      const promises = Array(6).fill(null).map(() => mealDBService.getRandomMeal());
+      const promises = Array(6)
+        .fill(null)
+        .map(() => mealDBService.getRandomMeal());
       const results = await Promise.all(promises);
-      
+
       const meals = results
-        .filter(result => result.status === 'success' && result.data)
-        .map(result => result.data!)
+        .filter((result) => result.status === 'success' && result.data)
+        .map((result) => result.data!)
         .slice(0, 4); // Take first 4 successful results
 
       setFeaturedMeals(meals);
@@ -104,10 +106,10 @@ export const useMeals = () => {
     searchState,
     searchMeals,
     clearSearch,
-    
+
     // Individual meal
     getMealById,
-    
+
     // Featured meals
     featuredMeals,
     isLoadingFeatured,

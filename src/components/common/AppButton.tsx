@@ -22,7 +22,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
   style,
 }) => {
   const isDisabled = disabled || loading;
-  
+
   const buttonStyle = [
     styles.base,
     styles[size],
@@ -45,8 +45,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
       style={buttonStyle}
       onPress={onPress}
       disabled={isDisabled}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       {loading ? (
         <ActivityIndicator color={spinnerColor} size="small" />
       ) : (
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...theme.shadows.small,
   },
-  
+
   // Sizes
   small: {
     height: 36,
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: theme.spacing['2xl'],
   },
-  
+
   // Variants
   primary: {
     backgroundColor: theme.colors.primary,
@@ -90,13 +89,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: theme.colors.primary,
   },
-  
+
   // Text base
   text: {
     fontWeight: theme.typography.fontWeight.semibold,
     textAlign: 'center',
   },
-  
+
   // Text sizes
   smallText: {
     fontSize: theme.typography.fontSize.sm,
@@ -110,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSize.lg,
     lineHeight: theme.typography.fontSize.lg * 1.2,
   },
-  
+
   // Text variants
   primaryText: {
     color: theme.colors.textInverse,
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
   outlineText: {
     color: theme.colors.primary,
   },
-  
+
   // States
   disabled: {
     opacity: 0.5,

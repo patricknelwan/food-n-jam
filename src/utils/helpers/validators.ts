@@ -61,11 +61,11 @@ export const validateEmail = (email: string): ValidationResult => {
   if (!isRequired(email)) {
     return { isValid: false, error: 'Email is required' };
   }
-  
+
   if (!isValidEmail(email)) {
     return { isValid: false, error: 'Please enter a valid email address' };
   }
-  
+
   return { isValid: true };
 };
 
@@ -73,11 +73,11 @@ export const validatePlaylistName = (name: string): ValidationResult => {
   if (!isRequired(name)) {
     return { isValid: false, error: 'Playlist name is required' };
   }
-  
+
   if (!isValidLength(name, 1, 100)) {
     return { isValid: false, error: 'Playlist name must be between 1 and 100 characters' };
   }
-  
+
   return { isValid: true };
 };
 
@@ -85,11 +85,11 @@ export const validateMealName = (name: string): ValidationResult => {
   if (!isRequired(name)) {
     return { isValid: false, error: 'Meal name is required' };
   }
-  
+
   if (!isValidLength(name, 1, 150)) {
     return { isValid: false, error: 'Meal name must be between 1 and 150 characters' };
   }
-  
+
   return { isValid: true };
 };
 
@@ -97,10 +97,10 @@ export const validateSearchQuery = (query: string): ValidationResult => {
   if (!isRequired(query)) {
     return { isValid: false, error: 'Search query cannot be empty' };
   }
-  
+
   if (!isValidLength(query, 2, 100)) {
     return { isValid: false, error: 'Search query must be between 2 and 100 characters' };
   }
-  
+
   return { isValid: true };
 };

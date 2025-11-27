@@ -18,7 +18,7 @@ export const useFavorites = () => {
   const loadStats = useCallback(async () => {
     try {
       const result = await favoritesService.getUserStats();
-      
+
       if (result.status === 'success') {
         setStats(result.data);
       }
@@ -31,10 +31,10 @@ export const useFavorites = () => {
   const loadPairings = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const result = await favoritesService.getUserPairings();
-      
+
       if (result.status === 'success') {
         setPairings(result.data);
         // Also reload stats when pairings change
@@ -50,67 +50,76 @@ export const useFavorites = () => {
   }, [loadStats]);
 
   // Save a new pairing
-  const savePairing = useCallback(async (pairingData: CreatePairingData): Promise<boolean> => {
-    try {
-      setError(null);
-      
-      // Check if pairing already exists
-      const existsResult = await favoritesService.checkPairingExists(
-        pairingData.meal_name,
-        pairingData.playlist_id
-      );
-      
-      if (existsResult.data) {
-        setError('This pairing is already saved to your favorites');
-        return false;
-      }
+  const savePairing = useCallback(
+    async (pairingData: CreatePairingData): Promise<boolean> => {
+      try {
+        setError(null);
 
-      const result = await favoritesService.savePairing(pairingData);
-      
-      if (result.status === 'success') {
-        // Refresh both pairings and stats
-        await loadPairings();
-        return true;
-      } else {
-        setError(result.error || 'Failed to save pairing');
+        // Check if pairing already exists
+        const existsResult = await favoritesService.checkPairingExists(
+          pairingData.meal_name,
+          pairingData.playlist_id
+        );
+
+        if (existsResult.data) {
+          setError('This pairing is already saved to your favorites');
+          return false;
+        }
+
+        const result = await favoritesService.savePairing(pairingData);
+
+        if (result.status === 'success') {
+          // Refresh both pairings and stats
+          await loadPairings();
+          return true;
+        } else {
+          setError(result.error || 'Failed to save pairing');
+          return false;
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to save pairing');
         return false;
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save pairing');
-      return false;
-    }
-  }, [loadPairings]);
+    },
+    [loadPairings]
+  );
 
   // Delete a pairing
-  const deletePairing = useCallback(async (pairingId: string): Promise<boolean> => {
-    try {
-      setError(null);
-      const result = await favoritesService.deletePairing(pairingId);
-      
-      if (result.status === 'success') {
-        // Remove from local state and reload stats
-        setPairings(prev => prev.filter(p => p.id !== pairingId));
-        await loadStats();
-        return true;
-      } else {
-        setError(result.error || 'Failed to delete pairing');
+  const deletePairing = useCallback(
+    async (pairingId: string): Promise<boolean> => {
+      try {
+        setError(null);
+        const result = await favoritesService.deletePairing(pairingId);
+
+        if (result.status === 'success') {
+          // Remove from local state and reload stats
+          setPairings((prev) => prev.filter((p) => p.id !== pairingId));
+          await loadStats();
+          return true;
+        } else {
+          setError(result.error || 'Failed to delete pairing');
+          return false;
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to delete pairing');
         return false;
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete pairing');
-      return false;
-    }
-  }, [loadStats]);
+    },
+    [loadStats]
+  );
 
   // Check if a specific pairing exists
-  const checkPairingExists = useCallback(async (mealName: string, playlistId: string): Promise<boolean> => {
-    try {
-      const result = await favoritesService.checkPairingExists(mealName, playlistId);
-      return result.data;
-    } catch {
-      return false;
-    }
-  }, []);
+  const checkPairingExists = useCallback(
+    async (mealName: string, playlistId: string): Promise<boolean> => {
+      try {
+        const result = await favoritesService.checkPairingExists(mealName, playlistId);
+        return result.data;
+      } catch {
+        return false;
+      }
+    },
+    []
+  );
 
   // Load pairings and stats on mount
   useEffect(() => {

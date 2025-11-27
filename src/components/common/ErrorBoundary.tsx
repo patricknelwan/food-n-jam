@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error boundary caught an error:', error, errorInfo);
-    
+
     // In production, you might want to send this to a crash reporting service
     // like Sentry, Crashlytics, etc.
   }
@@ -42,21 +42,15 @@ export class ErrorBoundary extends Component<Props, State> {
           <Text style={styles.message}>
             We're sorry, but something unexpected happened. You can try restarting the app.
           </Text>
-          
+
           {__DEV__ && this.state.error && (
             <View style={styles.errorDetails}>
               <Text style={styles.errorTitle}>Error Details (Dev Only):</Text>
-              <Text style={styles.errorText}>
-                {this.state.error.toString()}
-              </Text>
+              <Text style={styles.errorText}>{this.state.error.toString()}</Text>
             </View>
           )}
-          
-          <AppButton
-            label="Restart App"
-            onPress={this.handleRestart}
-            style={styles.button}
-          />
+
+          <AppButton label="Restart App" onPress={this.handleRestart} style={styles.button} />
         </View>
       );
     }
@@ -73,7 +67,7 @@ const styles = StyleSheet.create({
     padding: UI_CONSTANTS.SPACING.xl,
     backgroundColor: Colors.white,
   },
-  
+
   title: {
     ...Typography.text40,
     fontWeight: 'bold',
@@ -81,7 +75,7 @@ const styles = StyleSheet.create({
     marginBottom: UI_CONSTANTS.SPACING.md,
     textAlign: 'center',
   },
-  
+
   message: {
     ...Typography.text60,
     color: Colors.grey20,
@@ -89,7 +83,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: UI_CONSTANTS.SPACING.xl,
   },
-  
+
   errorDetails: {
     backgroundColor: Colors.grey70,
     padding: UI_CONSTANTS.SPACING.md,
@@ -97,20 +91,20 @@ const styles = StyleSheet.create({
     marginBottom: UI_CONSTANTS.SPACING.xl,
     width: '100%',
   },
-  
+
   errorTitle: {
     ...Typography.text70,
     fontWeight: '600',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   errorText: {
     ...Typography.text80,
     color: Colors.grey30,
     fontFamily: 'monospace',
   },
-  
+
   button: {
     minWidth: 150,
   },

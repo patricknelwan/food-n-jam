@@ -6,7 +6,7 @@ export const theme = {
   colors,
   typography,
   spacing,
-  
+
   // Commonly used combinations
   shadows: {
     small: {
@@ -31,7 +31,7 @@ export const theme = {
       elevation: 8,
     },
   },
-  
+
   borderRadius: {
     xs: 4,
     sm: 6,

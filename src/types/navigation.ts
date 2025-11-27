@@ -8,7 +8,7 @@ export type AuthStackParamList = {
   Login: undefined;
 };
 
-// Main Tab Navigation  
+// Main Tab Navigation
 export type MainTabParamList = {
   Home: undefined;
   Favorites: undefined;
@@ -42,20 +42,30 @@ export type RootStackParamList = {
 };
 
 // Screen Props Types
-export type AuthStackScreenProps<T extends keyof AuthStackParamList> = 
-  StackScreenProps<AuthStackParamList, T>;
+export type AuthStackScreenProps<T extends keyof AuthStackParamList> = StackScreenProps<
+  AuthStackParamList,
+  T
+>;
 
-export type MainTabScreenProps<T extends keyof MainTabParamList> = 
-  BottomTabScreenProps<MainTabParamList, T>;
+export type MainTabScreenProps<T extends keyof MainTabParamList> = BottomTabScreenProps<
+  MainTabParamList,
+  T
+>;
 
-export type MealStackScreenProps<T extends keyof MealStackParamList> = 
-  StackScreenProps<MealStackParamList, T>;
+export type MealStackScreenProps<T extends keyof MealStackParamList> = StackScreenProps<
+  MealStackParamList,
+  T
+>;
 
-export type PlaylistStackScreenProps<T extends keyof PlaylistStackParamList> = 
-  StackScreenProps<PlaylistStackParamList, T>;
+export type PlaylistStackScreenProps<T extends keyof PlaylistStackParamList> = StackScreenProps<
+  PlaylistStackParamList,
+  T
+>;
 
-export type RootStackScreenProps<T extends keyof RootStackParamList> = 
-  StackScreenProps<RootStackParamList, T>;
+export type RootStackScreenProps<T extends keyof RootStackParamList> = StackScreenProps<
+  RootStackParamList,
+  T
+>;
 
 declare global {
   namespace ReactNavigation {

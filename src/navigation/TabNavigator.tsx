@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '@screens/main/HomeScreen';
 import { FavoritesScreen } from '@screens/main/FavoritesScreen';
 import { ProfileScreen } from '@screens/main/ProfileScreen';
-import type { MainTabParamList } from './types';
+import type { MainTabParamList } from '@app-types/navigation';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -24,49 +24,36 @@ export const MainTabNavigator = () => {
           paddingTop: 8,
           height: 60,
         },
-      }}
-    >
-      <Tab.Screen 
-        name="Home" 
+      }}>
+      <Tab.Screen
+        name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons 
-              name={focused ? 'home' : 'home-outline'} 
-              size={size} 
-              color={color} 
-            />
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
           ),
         }}
       />
-      
-      <Tab.Screen 
-        name="Favorites" 
+
+      <Tab.Screen
+        name="Favorites"
         component={FavoritesScreen}
         options={{
           tabBarLabel: 'Favorites',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons 
-              name={focused ? 'heart' : 'heart-outline'} 
-              size={size} 
-              color={color} 
-            />
+            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={size} color={color} />
           ),
         }}
       />
-      
-      <Tab.Screen 
-        name="Profile" 
+
+      <Tab.Screen
+        name="Profile"
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons 
-              name={focused ? 'person' : 'person-outline'} 
-              size={size} 
-              color={color} 
-            />
+            <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
           ),
         }}
       />

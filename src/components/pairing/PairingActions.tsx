@@ -38,7 +38,7 @@ export const PairingActions: React.FC<PairingActionsProps> = ({
     console.log('DEBUG: meal name:', pairing.meal.name);
     console.log('DEBUG: playlist name:', pairing.playlist.name);
     console.log('=====================================');
-    
+
     if (playlistId) {
       checkIfSaved();
     }
@@ -62,7 +62,7 @@ export const PairingActions: React.FC<PairingActionsProps> = ({
     console.log('DEBUG: SAVE BUTTON PRESSED!');
     console.log('DEBUG: Timestamp:', new Date().toISOString());
     console.log('=====================================');
-    
+
     if (!playlistId) {
       console.error('DEBUG: ERROR - No playlistId provided!');
       console.log('DEBUG: playlistId value:', playlistId);
@@ -92,7 +92,7 @@ export const PairingActions: React.FC<PairingActionsProps> = ({
 
       console.log('DEBUG: Calling savePairing()...');
       const success = await savePairing(pairingData);
-      
+
       console.log('=====================================');
       console.log('DEBUG: savePairing() returned:', success);
       console.log('DEBUG: Return type:', typeof success);
@@ -152,15 +152,14 @@ export const PairingActions: React.FC<PairingActionsProps> = ({
           text: 'Open Spotify',
           onPress: () => {
             onOpenSpotify?.();
-          }
-        }
+          },
+        },
       ]
     );
   };
 
-  const containerStyle = layout === 'horizontal'
-    ? styles.horizontalContainer
-    : styles.verticalContainer;
+  const containerStyle =
+    layout === 'horizontal' ? styles.horizontalContainer : styles.verticalContainer;
 
   console.log('DEBUG: Rendering - isSaved:', isSaved, 'isSaving:', isSaving);
 
@@ -196,7 +195,7 @@ export const PairingActions: React.FC<PairingActionsProps> = ({
           size="medium"
           style={styles.flexButton}
         />
-        
+
         <AppButton
           label="Share"
           onPress={handleSharePairing}

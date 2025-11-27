@@ -27,7 +27,7 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
 
     try {
       const success = await shareHelper.shareSavedPairing(pairing);
-      
+
       if (success) {
         onClose();
       }
@@ -42,7 +42,7 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
     if (!pairing) return;
 
     const customMessage = `Just discovered an amazing pairing! 🍽️🎵\n\n${pairing.meal_name} goes perfectly with "${pairing.playlist_name}"\n\nTry it and let me know what you think! ✨`;
-    
+
     setIsSharing(true);
     try {
       await shareHelper.shareCustomMessage(customMessage, 'Check out this pairing!');
@@ -61,8 +61,7 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={onClose}
-    >
+      onRequestClose={onClose}>
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.header}>
           <Text style={styles.title}>Share Pairing</Text>
@@ -79,23 +78,23 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
           {/* Pairing Preview */}
           <View style={styles.pairingPreview}>
             <Text style={styles.previewTitle}>Your Pairing</Text>
-            
+
             <View style={styles.pairingInfo}>
               <View style={styles.pairingRow}>
                 <Text style={styles.emoji}>🍽️</Text>
                 <Text style={styles.pairingText}>{pairing.meal_name}</Text>
               </View>
-              
+
               <View style={styles.plusRow}>
                 <Text style={styles.plusText}>+</Text>
               </View>
-              
+
               <View style={styles.pairingRow}>
                 <Text style={styles.emoji}>🎵</Text>
                 <Text style={styles.pairingText}>"{pairing.playlist_name}"</Text>
               </View>
             </View>
-            
+
             <View style={styles.cuisineBadge}>
               <Text style={styles.cuisineText}>{pairing.cuisine} Cuisine</Text>
             </View>
@@ -114,9 +113,7 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
                   size="large"
                   style={styles.shareButton}
                 />
-                <Text style={styles.shareButtonDescription}>
-                  Share via your favorite apps
-                </Text>
+                <Text style={styles.shareButtonDescription}>Share via your favorite apps</Text>
               </View>
 
               <View style={styles.shareButtonContainer}>
@@ -128,9 +125,7 @@ export const SharePairingModal: React.FC<SharePairingModalProps> = ({
                   size="large"
                   style={styles.shareButton}
                 />
-                <Text style={styles.shareButtonDescription}>
-                  Share with a personal touch
-                </Text>
+                <Text style={styles.shareButtonDescription}>Share with a personal touch</Text>
               </View>
             </View>
           </View>
@@ -156,7 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
   },
-  
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -166,30 +161,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.grey70,
   },
-  
+
   title: {
     ...Typography.text50,
     fontWeight: 'bold',
     color: Colors.text,
   },
-  
+
   closeButton: {
     width: 40,
     height: 40,
   },
-  
+
   content: {
     flex: 1,
     padding: UI_CONSTANTS.SPACING.lg,
   },
-  
+
   pairingPreview: {
     backgroundColor: Colors.grey80,
     borderRadius: UI_CONSTANTS.CARD_BORDER_RADIUS,
     padding: UI_CONSTANTS.SPACING.lg,
     marginBottom: UI_CONSTANTS.SPACING.xl,
   },
-  
+
   previewTitle: {
     ...Typography.text60,
     fontWeight: '600',
@@ -197,40 +192,40 @@ const styles = StyleSheet.create({
     marginBottom: UI_CONSTANTS.SPACING.md,
     textAlign: 'center',
   },
-  
+
   pairingInfo: {
     alignItems: 'center',
     marginBottom: UI_CONSTANTS.SPACING.md,
   },
-  
+
   pairingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   emoji: {
     fontSize: 24,
     marginRight: UI_CONSTANTS.SPACING.sm,
   },
-  
+
   pairingText: {
     ...Typography.text60,
     fontWeight: '500',
     color: Colors.text,
     textAlign: 'center',
   },
-  
+
   plusRow: {
     marginVertical: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   plusText: {
     ...Typography.text50,
     fontWeight: 'bold',
     color: Colors.grey30,
   },
-  
+
   cuisineBadge: {
     backgroundColor: Colors.primary,
     paddingHorizontal: UI_CONSTANTS.SPACING.md,
@@ -238,49 +233,49 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'center',
   },
-  
+
   cuisineText: {
     ...Typography.text80,
     color: Colors.white,
     fontWeight: '500',
   },
-  
+
   shareOptions: {
     marginBottom: UI_CONSTANTS.SPACING.xl,
   },
-  
+
   sectionTitle: {
     ...Typography.text60,
     fontWeight: '600',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.md,
   },
-  
+
   shareButtons: {
     gap: UI_CONSTANTS.SPACING.md,
   },
-  
+
   shareButton: {
     width: '100%',
   },
-  
+
   tips: {
     backgroundColor: Colors.grey80,
     borderRadius: UI_CONSTANTS.CARD_BORDER_RADIUS,
     padding: UI_CONSTANTS.SPACING.lg,
   },
-  
+
   tipsTitle: {
     ...Typography.text60,
     fontWeight: '600',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.md,
   },
-  
+
   tipsList: {
     gap: UI_CONSTANTS.SPACING.sm,
   },
-  
+
   tip: {
     ...Typography.text70,
     color: Colors.grey20,
@@ -288,24 +283,24 @@ const styles = StyleSheet.create({
   },
 
   shareButtonContainer: {
-  alignItems: 'center',
-  gap: UI_CONSTANTS.SPACING.xs,
-},
+    alignItems: 'center',
+    gap: UI_CONSTANTS.SPACING.xs,
+  },
 
-shareButtonDescription: {
-  ...Typography.text80,
-  color: Colors.grey30,
-  textAlign: 'center',
-},
+  shareButtonDescription: {
+    ...Typography.text80,
+    color: Colors.grey30,
+    textAlign: 'center',
+  },
 
-shareDescriptions: {
-  marginTop: UI_CONSTANTS.SPACING.sm,
-  alignItems: 'center',
-},
+  shareDescriptions: {
+    marginTop: UI_CONSTANTS.SPACING.sm,
+    alignItems: 'center',
+  },
 
-shareDescription: {
-  ...Typography.text80,
-  color: Colors.grey30,
-  textAlign: 'center',
-},
+  shareDescription: {
+    ...Typography.text80,
+    color: Colors.grey30,
+    textAlign: 'center',
+  },
 });

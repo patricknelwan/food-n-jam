@@ -13,12 +13,7 @@ interface PairingCardProps {
   style?: any;
 }
 
-export const PairingCard: React.FC<PairingCardProps> = ({
-  pairing,
-  onPress,
-  onDelete,
-  style,
-}) => {
+export const PairingCard: React.FC<PairingCardProps> = ({ pairing, onPress, onDelete, style }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
   const longPressTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -40,7 +35,7 @@ export const PairingCard: React.FC<PairingCardProps> = ({
               duration: 200,
               useNativeDriver: true,
             }).start();
-          }
+          },
         },
       ]
     );
@@ -58,7 +53,7 @@ export const PairingCard: React.FC<PairingCardProps> = ({
         if (longPressTimeout.current) {
           clearTimeout(longPressTimeout.current);
         }
-        
+
         // Start long press timer for share
         longPressTimeout.current = setTimeout(() => {
           setShowShareModal(true);
@@ -142,8 +137,7 @@ export const PairingCard: React.FC<PairingCardProps> = ({
               transform: [{ translateX }],
             },
           ]}
-          {...panResponder.panHandlers}
-        >
+          {...panResponder.panHandlers}>
           <View style={styles.content}>
             <View style={styles.images}>
               <View style={styles.imageContainer}>
@@ -155,11 +149,11 @@ export const PairingCard: React.FC<PairingCardProps> = ({
                   </View>
                 )}
               </View>
-              
+
               <View style={styles.plusContainer}>
                 <Text style={styles.plusIcon}>+</Text>
               </View>
-              
+
               <View style={styles.imageContainer}>
                 {pairing.playlist_image ? (
                   <Image source={{ uri: pairing.playlist_image }} style={styles.playlistImage} />

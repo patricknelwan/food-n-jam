@@ -12,31 +12,27 @@ export const PlaylistDetailHeader: React.FC<PlaylistDetailHeaderProps> = ({ play
   return (
     <View style={styles.container}>
       {playlist.image ? (
-        <Image
-          source={{ uri: playlist.image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <Image source={{ uri: playlist.image }} style={styles.image} resizeMode="cover" />
       ) : (
         <View style={styles.placeholderImage}>
           <Text style={styles.placeholderIcon}>🎵</Text>
         </View>
       )}
-      
+
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Text style={styles.title}>{playlist.name}</Text>
-          
+
           <View style={styles.info}>
             <View style={styles.badge}>
               <Text style={styles.badgeText}>👤 {playlist.owner}</Text>
             </View>
-            
+
             <View style={styles.badge}>
               <Text style={styles.badgeText}>🎵 {playlist.trackCount} tracks</Text>
             </View>
           </View>
-          
+
           {playlist.isOwner && (
             <View style={styles.ownerIndicator}>
               <Text style={styles.ownerText}>✨ Your Playlist</Text>
@@ -53,12 +49,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: 280,
   },
-  
+
   image: {
     width: '100%',
     height: '100%',
   },
-  
+
   placeholderImage: {
     width: '100%',
     height: '100%',
@@ -66,12 +62,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   placeholderIcon: {
     fontSize: 80,
     opacity: 0.3,
   },
-  
+
   overlay: {
     position: 'absolute',
     bottom: 0,
@@ -80,11 +76,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     paddingTop: UI_CONSTANTS.SPACING.xl,
   },
-  
+
   content: {
     padding: UI_CONSTANTS.SPACING.lg,
   },
-  
+
   title: {
     ...Typography.text30,
     fontWeight: 'bold',
@@ -94,13 +90,13 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  
+
   info: {
     flexDirection: 'row',
     gap: UI_CONSTANTS.SPACING.sm,
     marginBottom: UI_CONSTANTS.SPACING.sm,
   },
-  
+
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: UI_CONSTANTS.SPACING.sm,
@@ -109,17 +105,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  
+
   badgeText: {
     ...Typography.text80,
     color: Colors.white,
     fontWeight: '500',
   },
-  
+
   ownerIndicator: {
     alignSelf: 'flex-start',
   },
-  
+
   ownerText: {
     ...Typography.text80,
     color: Colors.primary,

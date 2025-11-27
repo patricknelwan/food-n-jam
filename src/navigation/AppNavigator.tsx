@@ -7,12 +7,13 @@ import { MealFlowNavigator } from './MealFlowNavigator';
 import { PlaylistFlowNavigator } from './PlaylistFlowNavigator';
 import { useAuth } from '@hooks/useAuth';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
-import type { RootStackParamList } from './types';
+import type { RootStackParamList } from '@app-types/navigation';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const AppNavigator = () => {
-  const { authState, isLoading } = useAuth();
+  const { authState } = useAuth();
+  const isLoading = authState === 'loading';
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -24,13 +25,13 @@ export const AppNavigator = () => {
         {authState === 'authenticated' ? (
           <>
             <Stack.Screen name="Main" component={MainTabNavigator} />
-            <Stack.Screen 
-              name="MealFlow" 
+            <Stack.Screen
+              name="MealFlow"
               component={MealFlowNavigator}
               options={{ presentation: 'modal' }}
             />
-            <Stack.Screen 
-              name="PlaylistFlow" 
+            <Stack.Screen
+              name="PlaylistFlow"
               component={PlaylistFlowNavigator}
               options={{ presentation: 'modal' }}
             />

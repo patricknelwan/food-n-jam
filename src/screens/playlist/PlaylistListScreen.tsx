@@ -8,18 +8,13 @@ import { EmptyState } from '@components/common/EmptyState';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useSpotify } from '@hooks/useSpotify';
 import { UI_CONSTANTS } from '@utils/constants';
-import type { PlaylistStackScreenProps } from '../../navigation/types';
+import type { PlaylistStackScreenProps } from '@app-types/navigation';
 
 type PlaylistListScreenProps = PlaylistStackScreenProps<'PlaylistList'>;
 
 export const PlaylistListScreen: React.FC<PlaylistListScreenProps> = () => {
   const navigation = useNavigation<PlaylistListScreenProps['navigation']>();
-  const { 
-    playlists, 
-    isLoading, 
-    error, 
-    loadUserPlaylists 
-  } = useSpotify();
+  const { playlists, isLoading, error, loadUserPlaylists } = useSpotify();
 
   useEffect(() => {
     loadUserPlaylists();
@@ -104,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.grey80,
   },
-  
+
   header: {
     paddingHorizontal: UI_CONSTANTS.SPACING.lg,
     paddingVertical: UI_CONSTANTS.SPACING.lg,
@@ -118,28 +113,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   subtitle: {
     fontSize: 16,
     color: Colors.grey30,
   },
-  
+
   listContainer: {
     padding: UI_CONSTANTS.SPACING.lg,
     flexGrow: 1,
   },
-  
+
   playlistCard: {
     marginBottom: UI_CONSTANTS.SPACING.md,
   },
-  
+
   separator: {
     height: UI_CONSTANTS.SPACING.sm,
   },

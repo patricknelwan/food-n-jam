@@ -15,15 +15,8 @@ interface FavoritesScreenProps {
 }
 
 export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ navigation }) => {
-  const {
-    pairings,
-    isLoading,
-    error,
-    stats,
-    loadPairings,
-    deletePairing
-  } = useFavorites();
-  
+  const { pairings, isLoading, error, stats, loadPairings, deletePairing } = useFavorites();
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handlePairingPress = (pairing: SavedPairing) => {
@@ -57,10 +50,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ navigation }) 
       pairing={item}
       onPress={() => handlePairingPress(item)}
       onDelete={handleDeletePairing}
-      style={[
-        styles.pairingCard,
-        deletingId === item.id && styles.deletingCard
-      ]}
+      style={[styles.pairingCard, deletingId === item.id && styles.deletingCard]}
     />
   );
 
@@ -97,7 +87,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ navigation }) 
           <Text style={styles.title}>Your Favorites</Text>
           <Text style={styles.subtitle}>Your saved meal and music pairings</Text>
         </View>
-        
+
         {pairings.length > 0 && (
           <View style={styles.statsSection}>
             <View style={styles.statsGrid}>
@@ -105,17 +95,17 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ navigation }) 
                 <Text style={styles.statNumber}>{stats.totalPairings}</Text>
                 <Text style={styles.statLabel}>Total Pairings</Text>
               </View>
-              
+
               <View style={styles.statItem}>
                 <Text style={styles.statNumber}>{stats.uniqueMeals}</Text>
                 <Text style={styles.statLabel}>Unique Meals</Text>
               </View>
-              
+
               <View style={styles.statItem}>
                 <Text style={styles.statNumber}>{stats.uniquePlaylists}</Text>
                 <Text style={styles.statLabel}>Playlists</Text>
               </View>
-              
+
               {stats.topCuisine && (
                 <View style={styles.statItem}>
                   <Text style={styles.statNumber}>{stats.topCuisine}</Text>
@@ -135,7 +125,7 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({ navigation }) 
       <FlatList
         data={pairings}
         renderItem={renderPairingItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={renderEmptyState}

@@ -31,9 +31,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const handleMealPress = (mealId: string, mealName: string) => {
-    navigation.navigate('MealFlow', { 
+    navigation.navigate('MealFlow', {
       screen: 'MealDetail',
-      params: { mealId, mealName }
+      params: { mealId, mealName },
     });
   };
 
@@ -52,15 +52,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.greeting}>
-            Hello, {user?.display_name || 'Music Lover'}!
-          </Text>
+          <Text style={styles.greeting}>Hello, {user?.display_name || 'Music Lover'}!</Text>
           <Text style={styles.subtitle}>What's Your Vibe Today?</Text>
         </View>
 
@@ -73,7 +68,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             style={styles.actionCard}
             variant="orange"
           />
-          
+
           <AppCard
             title="Playlist to Meal"
             subtitle="Discover meals that match your music"
@@ -91,11 +86,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <LoadingSpinner />
             </View>
           ) : (
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false} 
-              contentContainerStyle={styles.horizontalScroll}
-            >
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalScroll}>
               {featuredMeals.map((meal) => (
                 <MealCard
                   key={meal.id}
@@ -119,7 +113,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               style={styles.quickActionCard}
               variant="default"
             />
-            
+
             <AppCard
               title="My Favorites"
               subtitle="Your saved pairings"

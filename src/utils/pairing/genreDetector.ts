@@ -1,5 +1,5 @@
 import { spotifyService } from '@services/api/spotify';
-import type { SpotifyGenreDetection, SpotifyPlaylist, SpotifyTrack } from '@types/spotify';
+import type { SpotifyGenreDetection, SpotifyPlaylist, SpotifyTrack } from '@app-types/spotify';
 
 class GenreDetector {
   // Primary method: Detect genre from playlist
@@ -23,20 +23,20 @@ class GenreDetector {
   // Detect genre from playlist name using keywords
   private detectFromPlaylistName(playlistName: string): SpotifyGenreDetection {
     const name = playlistName.toLowerCase();
-    
+
     const genreKeywords = {
-      'latin': ['latin', 'latino', 'salsa', 'bachata', 'merengue', 'reggaeton', 'spanish'],
-      'reggae': ['reggae', 'jamaica', 'bob marley', 'rastafari'],
-      'jazz': ['jazz', 'blues', 'swing', 'bebop', 'smooth', 'café'],
-      'classical': ['classical', 'orchestra', 'symphony', 'opera', 'baroque', 'piano'],
-      'rock': ['rock', 'metal', 'punk', 'alternative', 'indie rock'],
-      'pop': ['pop', 'hits', 'chart', 'mainstream', 'radio'],
+      latin: ['latin', 'latino', 'salsa', 'bachata', 'merengue', 'reggaeton', 'spanish'],
+      reggae: ['reggae', 'jamaica', 'bob marley', 'rastafari'],
+      jazz: ['jazz', 'blues', 'swing', 'bebop', 'smooth', 'café'],
+      classical: ['classical', 'orchestra', 'symphony', 'opera', 'baroque', 'piano'],
+      rock: ['rock', 'metal', 'punk', 'alternative', 'indie rock'],
+      pop: ['pop', 'hits', 'chart', 'mainstream', 'radio'],
       'hip-hop': ['hip hop', 'rap', 'hiphop', 'trap', 'drill'],
-      'electronic': ['electronic', 'edm', 'techno', 'house', 'trance', 'dubstep'],
-      'country': ['country', 'folk', 'bluegrass', 'americana'],
+      electronic: ['electronic', 'edm', 'techno', 'house', 'trance', 'dubstep'],
+      country: ['country', 'folk', 'bluegrass', 'americana'],
       'r&b': ['r&b', 'rnb', 'soul', 'funk', 'motown'],
-      'indie': ['indie', 'alternative', 'hipster', 'underground'],
-      'chill': ['chill', 'lofi', 'ambient', 'relax', 'study', 'sleep'],
+      indie: ['indie', 'alternative', 'hipster', 'underground'],
+      chill: ['chill', 'lofi', 'ambient', 'relax', 'study', 'sleep'],
       'world-music': ['world', 'ethnic', 'traditional', 'cultural'],
     };
 
@@ -71,7 +71,7 @@ class GenreDetector {
       }
 
       const tracks = tracksResult.data.slice(0, 20); // Analyze first 20 tracks
-      const trackIds = tracks.map(track => track.id);
+      const trackIds = tracks.map((track) => track.id);
 
       // Get audio features
       const featuresResult = await spotifyService.getAudioFeatures(trackIds);
@@ -86,9 +86,9 @@ class GenreDetector {
         detectedGenre: genre.genre,
         confidence: genre.confidence,
         method: 'audio_features',
-        details: { 
+        details: {
           tracksAnalyzed: audioFeatures.length,
-          averageFeatures: genre.averageFeatures 
+          averageFeatures: genre.averageFeatures,
         },
       };
     } catch (error) {
@@ -178,13 +178,13 @@ class GenreDetector {
 
     // Add related genres based on the detected one
     const relatedGenres: Record<string, string[]> = {
-      'latin': ['reggaeton', 'salsa', 'pop'],
-      'reggae': ['caribbean', 'world-music', 'chill'],
-      'jazz': ['blues', 'soul', 'classical'],
-      'rock': ['alternative', 'indie', 'metal'],
-      'pop': ['indie', 'electronic', 'r&b'],
-      'electronic': ['house', 'ambient', 'pop'],
-      'chill': ['ambient', 'indie', 'jazz'],
+      latin: ['reggaeton', 'salsa', 'pop'],
+      reggae: ['caribbean', 'world-music', 'chill'],
+      jazz: ['blues', 'soul', 'classical'],
+      rock: ['alternative', 'indie', 'metal'],
+      pop: ['indie', 'electronic', 'r&b'],
+      electronic: ['house', 'ambient', 'pop'],
+      chill: ['ambient', 'indie', 'jazz'],
     };
 
     const related = relatedGenres[detection.detectedGenre] || [];

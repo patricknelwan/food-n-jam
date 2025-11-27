@@ -21,8 +21,7 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
     <TouchableOpacity
       style={[styles.card, styles[`${size}Card`], style]}
       onPress={onPress}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       <View style={styles.content}>
         <View style={[styles.imageContainer, styles[`${size}ImageContainer`]]}>
           {playlist.image ? (
@@ -37,22 +36,22 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
             </View>
           )}
         </View>
-        
+
         <View style={styles.info}>
           <Text style={[styles.title, styles[`${size}Title`]]} numberOfLines={2}>
             {playlist.name}
           </Text>
-          
+
           <View style={styles.metadata}>
             <Text style={[styles.owner, styles[`${size}Owner`]]} numberOfLines={1}>
               by {playlist.owner}
             </Text>
-            
+
             <View style={styles.stats}>
               <Text style={[styles.trackCount, styles[`${size}TrackCount`]]}>
                 🎵 {playlist.trackCount} tracks
               </Text>
-              
+
               {playlist.isOwner && (
                 <View style={styles.ownerBadge}>
                   <Text style={styles.ownerBadgeText}>Your Playlist</Text>
@@ -60,7 +59,7 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
               )}
             </View>
           </View>
-          
+
           {playlist.description && size === 'large' && (
             <Text style={styles.description} numberOfLines={2}>
               {playlist.description}
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     overflow: 'hidden',
   },
-  
+
   smallCard: {
     width: 140,
   },
@@ -96,16 +95,16 @@ const styles = StyleSheet.create({
   largeCard: {
     width: '100%',
   },
-  
+
   content: {
     flexDirection: 'row',
     padding: UI_CONSTANTS.SPACING.md,
   },
-  
+
   imageContainer: {
     marginRight: UI_CONSTANTS.SPACING.md,
   },
-  
+
   smallImageContainer: {
     alignSelf: 'flex-start',
   },
@@ -115,12 +114,12 @@ const styles = StyleSheet.create({
   largeImageContainer: {
     alignSelf: 'flex-start',
   },
-  
+
   image: {
     backgroundColor: Colors.grey70,
     borderRadius: 8,
   },
-  
+
   smallImage: {
     width: 60,
     height: 60,
@@ -133,30 +132,30 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  
+
   placeholderImage: {
     backgroundColor: Colors.grey70,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   placeholderIcon: {
     fontSize: 24,
     opacity: 0.6,
   },
-  
+
   info: {
     flex: 1,
     justifyContent: 'flex-start',
   },
-  
+
   title: {
     fontWeight: '600',
     color: Colors.text,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   smallTitle: {
     ...Typography.text80,
   },
@@ -166,16 +165,16 @@ const styles = StyleSheet.create({
   largeTitle: {
     ...Typography.text60,
   },
-  
+
   metadata: {
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   owner: {
     color: Colors.grey30,
     marginBottom: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   smallOwner: {
     ...Typography.text90,
   },
@@ -185,18 +184,18 @@ const styles = StyleSheet.create({
   largeOwner: {
     ...Typography.text70,
   },
-  
+
   stats: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   trackCount: {
     color: Colors.grey40,
   },
-  
+
   smallTrackCount: {
     ...Typography.text90,
   },
@@ -206,20 +205,20 @@ const styles = StyleSheet.create({
   largeTrackCount: {
     ...Typography.text80,
   },
-  
+
   ownerBadge: {
     backgroundColor: Colors.primary,
     paddingHorizontal: UI_CONSTANTS.SPACING.xs,
     paddingVertical: 2,
     borderRadius: 4,
   },
-  
+
   ownerBadgeText: {
     ...Typography.text90,
     color: Colors.white,
     fontWeight: '500',
   },
-  
+
   description: {
     ...Typography.text80,
     color: Colors.grey30,

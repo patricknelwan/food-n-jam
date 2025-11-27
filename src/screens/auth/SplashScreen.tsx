@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import type { AuthStackScreenProps } from '../../navigation/types';
+import type { AuthStackScreenProps } from '@app-types/navigation';
 import { APP_CONFIG } from '@utils/constants';
 
 type SplashScreenProps = AuthStackScreenProps<'Splash'>;
@@ -26,11 +26,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = () => {
         <View style={styles.logoPlaceholder}>
           <Text style={styles.logoText}>🍽️🎵</Text>
         </View>
-        
+
         <Text style={styles.title}>{APP_CONFIG.name}</Text>
         <Text style={styles.tagline}>Pair your meals with the perfect playlist</Text>
       </View>
-      
+
       <Text style={styles.version}>v{APP_CONFIG.version}</Text>
     </View>
   );

@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const storedTokens = await authService.getStoredTokens();
       const storedUser = await authService.getStoredUser();
-      
+
       console.log('🔍 AuthContext: storedTokens:', !!storedTokens);
       console.log('🔍 AuthContext: storedUser:', !!storedUser);
 
@@ -88,16 +88,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       console.log('🔄 AuthContext: Starting logout...');
-      
+
       await authService.logout();
-      
+
       setUser(null);
       setTokens(null);
       setError(null);
-      
+
       console.log('✅ AuthContext: Setting unauthenticated state');
       setAuthState('unauthenticated');
-      
+
       console.log('🎉 AuthContext: Logout completed');
     } catch (error) {
       console.error('❌ AuthContext: Logout error:', error);
@@ -115,11 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {

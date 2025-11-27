@@ -20,7 +20,7 @@ export const MealSearchBar: React.FC<MealSearchBarProps> = ({
 
   const handleChangeText = (text: string) => {
     setQuery(text);
-    
+
     // Debounce search
     if (text.length === 0) {
       onClear?.();
@@ -52,7 +52,7 @@ export const MealSearchBar: React.FC<MealSearchBarProps> = ({
         returnKeyType="search"
         onSubmitEditing={handleSubmit}
       />
-      
+
       {query.length > 0 && (
         <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
           <Text style={styles.clearText}>✕</Text>

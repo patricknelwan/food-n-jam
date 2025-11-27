@@ -9,7 +9,7 @@ import { StatCard } from '@components/common/StatCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFavorites } from '@hooks/useFavorites';
 import { UI_CONSTANTS, APP_CONFIG } from '@utils/constants';
-import type { MainTabScreenProps } from '../../navigation/types';
+import type { MainTabScreenProps } from '@app-types/navigation';
 
 type ProfileScreenProps = MainTabScreenProps<'Profile'>;
 
@@ -26,32 +26,25 @@ export const ProfileScreen: React.FC = () => {
   );
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            console.log('🔄 Profile: Starting logout process...');
-            await logout();
-            console.log('✅ Profile: Logout completed');
-          }
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          console.log('🔄 Profile: Starting logout process...');
+          await logout();
+          console.log('✅ Profile: Logout completed');
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleSpotifySettings = () => {
     Alert.alert(
       'Spotify Connection',
       `You're currently connected to Spotify as ${user?.display_name || 'Unknown User'}. To change your Spotify account, you'll need to logout and login again.`,
-      [
-        { text: 'OK' },
-        { text: 'Logout & Reconnect', onPress: logout }
-      ]
+      [{ text: 'OK' }, { text: 'Logout & Reconnect', onPress: logout }]
     );
   };
 
@@ -66,12 +59,15 @@ export const ProfileScreen: React.FC = () => {
   const handleFeedback = () => {
     Alert.alert(
       'Send Feedback',
-      'We\'d love to hear your thoughts! Feature requests, bug reports, or general feedback are all welcome.',
+      "We'd love to hear your thoughts! Feature requests, bug reports, or general feedback are all welcome.",
       [
         { text: 'Cancel' },
-        { text: 'Email Us', onPress: () => {
-          Alert.alert('Coming Soon', 'Email feedback will be available in a future update!');
-        }}
+        {
+          text: 'Email Us',
+          onPress: () => {
+            Alert.alert('Coming Soon', 'Email feedback will be available in a future update!');
+          },
+        },
       ]
     );
   };
@@ -79,7 +75,7 @@ export const ProfileScreen: React.FC = () => {
   const formatMemberSince = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -123,14 +119,10 @@ export const ProfileScreen: React.FC = () => {
               style={styles.statCard}
             />
             {stats.topCuisine && (
-              <StatCard
-                title={stats.topCuisine}
-                subtitle="Top Cuisine"
-                style={styles.statCard}
-              />
+              <StatCard title={stats.topCuisine} subtitle="Top Cuisine" style={styles.statCard} />
             )}
           </View>
-          
+
           {stats.totalPairings === 0 && (
             <View style={styles.encouragement}>
               <Text style={styles.encouragementText}>

@@ -110,7 +110,7 @@ class SpotifyService {
         },
       });
 
-      const playlists = response.data.items.map((item: SpotifyPlaylist) => 
+      const playlists = response.data.items.map((item: SpotifyPlaylist) =>
         this.processPlaylist(item, tokens.access_token)
       );
 
@@ -291,14 +291,14 @@ class SpotifyService {
   // Get valid tokens (refresh if needed)
   private async getValidTokens(): Promise<SpotifyTokens | null> {
     const tokens = await authService.getStoredTokens();
-    
+
     if (!tokens) {
       return null;
     }
 
     // Check if tokens are still valid
     const isValid = await authService.checkTokenValidity(tokens);
-    
+
     if (isValid) {
       return tokens;
     }

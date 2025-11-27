@@ -25,7 +25,7 @@ class PairingLogic {
   // Create meal to playlist pairing
   async createMealPlaylistPairing(meal: Meal): Promise<MealPlaylistPairing> {
     const genreRecommendation = cuisineMapper.getGenreForCuisine(meal.cuisine);
-    
+
     // Calculate confidence based on how well-known the cuisine is
     const confidence = this.calculateMealPairingConfidence(meal);
 
@@ -43,16 +43,21 @@ class PairingLogic {
     detectedGenre: string
   ): Promise<PlaylistMealPairing> {
     const suggestedCuisines = cuisineMapper.getCuisinesForGenre(detectedGenre);
-    
+
     // Get a random meal from one of the suggested cuisines
     let suggestedMeal: Meal | null = null;
-    
+
     if (suggestedCuisines.length > 0) {
       const randomCuisine = suggestedCuisines[Math.floor(Math.random() * suggestedCuisines.length)];
-      const mealResult = await mealDBService.getMealsByCuisine(randomCuisine);
-      
-      if (mealResult.status === 'success' && mealResult.data.length > 0) {
-        suggestedMeal = mealResult.data[Math.floor(Math.random() * mealResult.data.length)];
+      if (randomCuisine) {
+        const mealResult = await mealDBService.getMealsByCuisine(randomCuisine);
+
+        if (mealResult.status === 'success' && mealResult.data.length > 0) {
+          const randomMeal = mealResult.data[Math.floor(Math.random() * mealResult.data.length)];
+          if (randomMeal) {
+            suggestedMeal = randomMeal;
+          }
+        }
       }
     }
 
@@ -76,10 +81,7 @@ class PairingLogic {
   }
 
   // Get multiple meal suggestions for a genre
-  async getMultipleMealSuggestions(
-    genre: string, 
-    count: number = 3
-  ): Promise<Meal[]> {
+  async getMultipleMealSuggestions(genre: string, count: number = 3): Promise<Meal[]> {
     const cuisines = cuisineMapper.getCuisinesForGenre(genre);
     const meals: Meal[] = [];
 
@@ -87,7 +89,9 @@ class PairingLogic {
       const result = await mealDBService.getMealsByCuisine(cuisine);
       if (result.status === 'success' && result.data.length > 0) {
         const randomMeal = result.data[Math.floor(Math.random() * result.data.length)];
-        meals.push(randomMeal);
+        if (randomMeal) {
+          meals.push(randomMeal);
+        }
       }
     }
 
@@ -116,10 +120,10 @@ class PairingLogic {
 
     // Higher confidence if meal has tags that might indicate mood/style
     const moodTags = ['spicy', 'comfort', 'fresh', 'hearty', 'light'];
-    const hasMoodTags = meal.tags.some(tag => 
-      moodTags.some(moodTag => tag.toLowerCase().includes(moodTag))
+    const hasMoodTags = meal.tags.some((tag) =>
+      moodTags.some((moodTag) => tag.toLowerCase().includes(moodTag))
     );
-    
+
     if (hasMoodTags) {
       confidence += 0.1;
     }
@@ -134,15 +138,12 @@ class PairingLogic {
   }
 
   // Calculate confidence for playlist-to-meal pairing
-  private calculatePlaylistPairingConfidence(
-    genre: string, 
-    suggestedCuisines: string[]
-  ): number {
+  private calculatePlaylistPairingConfidence(genre: string, suggestedCuisines: string[]): number {
     let confidence = 0.3; // Lower base confidence for reverse mapping
 
     // Higher confidence for well-defined genres
     const wellDefinedGenres = ['jazz', 'classical', 'reggae', 'latin', 'indian'];
-    if (wellDefinedGenres.some(g => genre.toLowerCase().includes(g))) {
+    if (wellDefinedGenres.some((g) => genre.toLowerCase().includes(g))) {
       confidence += 0.4;
     }
 
@@ -153,7 +154,7 @@ class PairingLogic {
 
     // Lower confidence for vague genres
     const vagueGenres = ['pop', 'rock', 'electronic'];
-    if (vagueGenres.some(g => genre.toLowerCase().includes(g))) {
+    if (vagueGenres.some((g) => genre.toLowerCase().includes(g))) {
       confidence -= 0.1;
     }
 

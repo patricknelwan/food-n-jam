@@ -14,7 +14,7 @@ export const useSpotify = () => {
 
     try {
       const result = await spotifyService.getUserPlaylists();
-      
+
       if (result.status === 'success') {
         setPlaylists(result.data);
       } else {

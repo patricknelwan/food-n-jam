@@ -2,10 +2,7 @@ import { useState, useCallback } from 'react';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { authService } from '../services/auth/AuthService';
-import {
-  EXPO_PUBLIC_SPOTIFY_CLIENT_ID,
-  EXPO_PUBLIC_REDIRECT_URI,
-} from '@env';
+import { EXPO_PUBLIC_SPOTIFY_CLIENT_ID, EXPO_PUBLIC_REDIRECT_URI } from '@env';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -36,7 +33,7 @@ export const useSpotifyAuth = () => {
     setIsLoading(true);
     try {
       const result = await promptAsync();
-      
+
       if (result.type !== 'success' || !result.params?.code) {
         throw new Error('Authentication cancelled or failed');
       }
@@ -46,7 +43,7 @@ export const useSpotifyAuth = () => {
         result.params.code,
         request.codeVerifier // Pass the code verifier
       );
-      
+
       setIsLoading(false);
       return loginResult;
     } catch (error) {

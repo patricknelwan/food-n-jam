@@ -11,26 +11,22 @@ interface MealDetailHeaderProps {
 export const MealDetailHeader: React.FC<MealDetailHeaderProps> = ({ meal }) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: meal.image }}
-        style={styles.image}
-        resizeMode="cover"
-      />
-      
+      <Image source={{ uri: meal.image }} style={styles.image} resizeMode="cover" />
+
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Text style={styles.title}>{meal.name}</Text>
-          
+
           <View style={styles.info}>
             <View style={styles.badge}>
               <Text style={styles.badgeText}>🌍 {meal.cuisine}</Text>
             </View>
-            
+
             <View style={styles.badge}>
               <Text style={styles.badgeText}>🍽️ {meal.category}</Text>
             </View>
           </View>
-          
+
           {meal.tags.length > 0 && (
             <View style={styles.tags}>
               {meal.tags.slice(0, 3).map((tag, index) => (
@@ -51,12 +47,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: 280,
   },
-  
+
   image: {
     width: '100%',
     height: '100%',
   },
-  
+
   overlay: {
     position: 'absolute',
     bottom: 0,
@@ -65,11 +61,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     paddingTop: UI_CONSTANTS.SPACING.xl,
   },
-  
+
   content: {
     padding: UI_CONSTANTS.SPACING.lg,
   },
-  
+
   title: {
     ...Typography.text30,
     fontWeight: 'bold',
@@ -79,13 +75,13 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  
+
   info: {
     flexDirection: 'row',
     gap: UI_CONSTANTS.SPACING.sm,
     marginBottom: UI_CONSTANTS.SPACING.sm,
   },
-  
+
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: UI_CONSTANTS.SPACING.sm,
@@ -94,19 +90,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  
+
   badgeText: {
     ...Typography.text80,
     color: Colors.white,
     fontWeight: '500',
   },
-  
+
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: UI_CONSTANTS.SPACING.xs,
   },
-  
+
   tag: {
     ...Typography.text90,
     color: 'rgba(255, 255, 255, 0.8)',

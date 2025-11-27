@@ -18,11 +18,10 @@ export const AppCard: React.FC<AppCardProps> = ({
   variant = 'default',
 }) => {
   return (
-    <TouchableOpacity 
-      style={[styles.card, styles[variant], style]} 
+    <TouchableOpacity
+      style={[styles.card, styles[variant], style]}
       onPress={onPress}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       <View>
         <Text style={[styles.title, styles[`${variant}Title`]]}>{title}</Text>
         <Text style={[styles.subtitle, styles[`${variant}Subtitle`]]}>{subtitle}</Text>
@@ -44,53 +43,53 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  
+
   default: {
     backgroundColor: Colors.white,
     borderLeftWidth: 4,
     borderLeftColor: Colors.primary,
   },
-  
+
   orange: {
     backgroundColor: '#FF6B35', // Food orange
   },
-  
+
   spotify: {
     backgroundColor: '#1DB954', // Spotify green
   },
-  
+
   title: {
     ...Typography.text60,
     fontWeight: '600',
     marginBottom: 4,
   },
-  
+
   defaultTitle: {
     color: Colors.grey10,
   },
-  
+
   orangeTitle: {
     color: Colors.white,
   },
-  
+
   spotifyTitle: {
     color: Colors.white,
   },
-  
+
   subtitle: {
     ...Typography.text80,
     lineHeight: 18,
   },
-  
+
   defaultSubtitle: {
     color: Colors.grey30,
   },
-  
+
   orangeSubtitle: {
     color: Colors.white,
     opacity: 0.9,
   },
-  
+
   spotifySubtitle: {
     color: Colors.white,
     opacity: 0.9,

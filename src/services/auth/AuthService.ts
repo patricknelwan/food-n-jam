@@ -16,34 +16,34 @@ class AuthService {
       console.log('🔧 Testing basic Supabase connection...');
       console.log('📍 URL:', EXPO_PUBLIC_SUPABASE_URL);
       console.log('🔑 Key prefix:', EXPO_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 20) + '...');
-      
+
       // Test 1: Direct HTTP request to Supabase
       console.log('🌐 Test 1: Direct HTTP request...');
       const response = await fetch(`${EXPO_PUBLIC_SUPABASE_URL}/rest/v1/`, {
         headers: {
-          'apikey': EXPO_PUBLIC_SUPABASE_ANON_KEY || '',
-          'Authorization': `Bearer ${EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
+          apikey: EXPO_PUBLIC_SUPABASE_ANON_KEY || '',
+          Authorization: `Bearer ${EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
       });
-      
+
       console.log('🌐 Direct API response status:', response.status);
       const responseText = await response.text();
       console.log('🌐 Direct API response (first 200 chars):', responseText.substring(0, 200));
-      
+
       if (response.status === 404) {
         throw new Error('Supabase project not found. Check your EXPO_PUBLIC_SUPABASE_URL');
       }
-      
+
       // Test 2: Supabase client connection
       console.log('🔧 Test 2: Supabase client connection...');
       const { data, error } = await supabase
         .from('users')
         .select('count', { count: 'exact', head: true });
-        
+
       console.log('📊 Users table count:', data);
       console.log('❗ Users table error:', error);
-      
+
       if (error) {
         console.error('❌ Supabase client connection failed:', error);
         throw error;
@@ -58,37 +58,37 @@ class AuthService {
 
   // Complete Spotify login with proper Supabase integration
   async completeSpotifyLogin(
-    code: string, 
+    code: string,
     codeVerifier?: string
   ): Promise<{ user: User; tokens: SpotifyTokens } | AuthError> {
     try {
       console.log('🔄 Starting Spotify login process...');
-      
+
       // Step 1: Exchange code for tokens
       console.log('🔄 Step 1: Exchange code for tokens');
       const tokens = await this.exchangeCodeForTokens(code, codeVerifier);
       console.log('✅ Step 1: Got tokens successfully');
-      
+
       // Step 2: Get user info from Spotify
       console.log('🔄 Step 2: Get user info from Spotify');
       const spotifyUser = await this.getSpotifyUserInfo(tokens.access_token);
       console.log('✅ Step 2: Got Spotify user info:', spotifyUser.display_name);
-      
+
       // Step 3: Create/update user in Supabase
       console.log('🔄 Step 3: Create/update user in Supabase');
       const user = await this.createOrUpdateUser(spotifyUser);
       console.log('✅ Step 3: User created/updated in Supabase');
-      
+
       // Step 4: Store tokens securely
       console.log('🔄 Step 4: Store tokens locally');
       await this.storeTokens(tokens);
       console.log('✅ Step 4: Tokens stored successfully');
-      
+
       // Step 5: Store user data locally - THIS IS THE KEY ADDITION!
       console.log('🔄 Step 5: Store user data locally');
       await this.storeUser(user);
       console.log('✅ Step 5: User data stored successfully');
-      
+
       console.log('🎉 Login completed successfully!');
       return { user, tokens };
     } catch (error) {
@@ -183,7 +183,7 @@ class AuthService {
         .from('users')
         .upsert(userData, {
           onConflict: 'spotify_id', // Conflict resolution on spotify_id
-          ignoreDuplicates: false    // Always update on conflict
+          ignoreDuplicates: false, // Always update on conflict
         })
         .select()
         .single();

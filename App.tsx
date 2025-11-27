@@ -8,8 +8,6 @@ import { AuthProvider, useAuth } from './src/contexts/AuthContext'; // Import Au
 const AppContent: React.FC = () => {
   const { authState, user } = useAuth();
 
-  console.log('🔍 App.tsx - Current authState:', authState);
-
   if (authState === 'loading') {
     return (
       <View style={styles.loadingContainer}>
@@ -19,11 +17,9 @@ const AppContent: React.FC = () => {
   }
 
   if (authState === 'unauthenticated') {
-    console.log('🔍 App.tsx - Showing LoginScreen');
     return <LoginScreen />;
   }
 
-  console.log('🔍 App.tsx - Showing AppNavigator for user:', user?.display_name);
   return <AppNavigator />;
 };
 

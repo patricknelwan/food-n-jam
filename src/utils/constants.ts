@@ -1,6 +1,6 @@
 // App Configuration
 export const APP_CONFIG = {
-  name: 'Food n\' Jam',
+  name: "Food n' Jam",
   version: '1.0.0',
   scheme: 'foodnjam',
 } as const;
@@ -26,7 +26,7 @@ export const STORAGE_KEYS = {
 export const AUTH_CONFIG = {
   SPOTIFY_SCOPES: [
     'user-read-private',
-    'user-read-email', 
+    'user-read-email',
     'playlist-read-private',
     'playlist-read-collaborative',
     'user-top-read',

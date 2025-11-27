@@ -72,11 +72,11 @@ export const MealSearchScreen: React.FC = () => {
         <Text style={styles.title}>Find Your Perfect Meal</Text>
         <MealSearchBar onSearch={searchMeals} />
       </View>
-      
+
       <FlatList
         data={searchState.results}
         renderItem={renderMealItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={renderEmptyState}

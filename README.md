@@ -33,24 +33,24 @@ Food n' Jam connects your culinary experiences with your musical taste. Discover
 ### Installation
 
 1. Clone the repository
-`git clone https://github.com/patricknelwan/food-n-jam.git
+   `git clone https://github.com/patricknelwan/food-n-jam.git
 cd food-n-jam`
 
 2. Install dependencies
-`npm install`
+   `npm install`
 
 3. Set up environment variables
-`cp .env.example .env`
+   `cp .env.example .env`
 
 Fill in your API keys:
+
 - `EXPO_PUBLIC_SUPABASE_URL`: Your Supabase project URL
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anon key
 - `EXPO_PUBLIC_SPOTIFY_CLIENT_ID`: Your Spotify app client ID
 - `EXPO_PUBLIC_SPOTIFY_CLIENT_SECRET`: Your Spotify app client secret
 
 4. Start the development server
-`npx expo start`
-
+   `npx expo start`
 
 ## App Structure
 
@@ -62,4 +62,4 @@ Fill in your API keys:
 
 ---
 
-*Created by Patrick Nelwan*
+_Created by Patrick Nelwan_

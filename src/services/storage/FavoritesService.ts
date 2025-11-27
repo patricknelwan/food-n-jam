@@ -18,19 +18,19 @@ class FavoritesService {
   async savePairing(pairingData: CreatePairingData): Promise<ApiResponse<SavedPairing>> {
     console.log('===== FavoritesService.savePairing =====');
     console.log('DEBUG FavoritesService: Saving pairing:', pairingData);
-    
+
     try {
       console.log('DEBUG FavoritesService: Getting stored user...');
       const user = await authService.getStoredUser();
-      
+
       console.log('DEBUG FavoritesService: User result:', user);
-      
+
       if (!user) {
         console.error('DEBUG FavoritesService: No user found!');
         return {
           data: {} as SavedPairing,
           error: 'User not authenticated',
-          status: 'error'
+          status: 'error',
         };
       }
 
@@ -64,7 +64,7 @@ class FavoritesService {
       console.log('DEBUG FavoritesService: Success!');
       return {
         data: data as SavedPairing,
-        status: 'success'
+        status: 'success',
       };
     } catch (error) {
       console.error('===== FavoritesService.savePairing ERROR =====');
@@ -72,7 +72,7 @@ class FavoritesService {
       return {
         data: {} as SavedPairing,
         error: error instanceof Error ? error.message : 'Failed to save pairing',
-        status: 'error'
+        status: 'error',
       };
     }
   }
@@ -81,12 +81,12 @@ class FavoritesService {
   async getUserPairings(): Promise<ApiResponse<SavedPairing[]>> {
     try {
       const user = await authService.getStoredUser();
-      
+
       if (!user) {
         return {
           data: [],
           error: 'User not authenticated',
-          status: 'error'
+          status: 'error',
         };
       }
 
@@ -102,13 +102,13 @@ class FavoritesService {
 
       return {
         data: data as SavedPairing[],
-        status: 'success'
+        status: 'success',
       };
     } catch (error) {
       return {
         data: [],
         error: error instanceof Error ? error.message : 'Failed to fetch pairings',
-        status: 'error'
+        status: 'error',
       };
     }
   }
@@ -117,12 +117,12 @@ class FavoritesService {
   async deletePairing(pairingId: string): Promise<ApiResponse<boolean>> {
     try {
       const user = await authService.getStoredUser();
-      
+
       if (!user) {
         return {
           data: false,
           error: 'User not authenticated',
-          status: 'error'
+          status: 'error',
         };
       }
 
@@ -138,13 +138,13 @@ class FavoritesService {
 
       return {
         data: true,
-        status: 'success'
+        status: 'success',
       };
     } catch (error) {
       return {
         data: false,
         error: error instanceof Error ? error.message : 'Failed to delete pairing',
-        status: 'error'
+        status: 'error',
       };
     }
   }
@@ -153,11 +153,11 @@ class FavoritesService {
   async checkPairingExists(mealName: string, playlistId: string): Promise<ApiResponse<boolean>> {
     try {
       const user = await authService.getStoredUser();
-      
+
       if (!user) {
         return {
           data: false,
-          status: 'success'
+          status: 'success',
         };
       }
 
@@ -175,13 +175,13 @@ class FavoritesService {
 
       return {
         data: data.length > 0,
-        status: 'success'
+        status: 'success',
       };
     } catch (error) {
       return {
         data: false,
         error: error instanceof Error ? error.message : 'Failed to check pairing',
-        status: 'error'
+        status: 'error',
       };
     }
   }
@@ -190,16 +190,16 @@ class FavoritesService {
   async getUserStats(): Promise<ApiResponse<any>> {
     try {
       const user = await authService.getStoredUser();
-      
+
       if (!user) {
         return {
           data: {
             totalPairings: 0,
             uniqueMeals: 0,
             uniquePlaylists: 0,
-            topCuisine: null
+            topCuisine: null,
           },
-          status: 'success'
+          status: 'success',
         };
       }
 
@@ -212,26 +212,27 @@ class FavoritesService {
         throw error;
       }
 
-      const uniqueMeals = new Set(pairings.map(p => p.meal_name)).size;
-      const uniquePlaylists = new Set(pairings.map(p => p.playlist_id)).size;
+      const uniqueMeals = new Set(pairings.map((p) => p.meal_name)).size;
+      const uniquePlaylists = new Set(pairings.map((p) => p.playlist_id)).size;
 
       const cuisineCounts: Record<string, number> = {};
-      pairings.forEach(p => {
+      pairings.forEach((p) => {
         cuisineCounts[p.cuisine] = (cuisineCounts[p.cuisine] || 0) + 1;
       });
 
-      const topCuisine = Object.keys(cuisineCounts).length > 0
-        ? Object.entries(cuisineCounts).reduce((a, b) => a[1] > b[1] ? a : b)[0]
-        : null;
+      const topCuisine =
+        Object.keys(cuisineCounts).length > 0
+          ? Object.entries(cuisineCounts).reduce((a, b) => (a[1] > b[1] ? a : b))[0]
+          : null;
 
       return {
         data: {
           totalPairings: pairings.length,
           uniqueMeals,
           uniquePlaylists,
-          topCuisine
+          topCuisine,
         },
-        status: 'success'
+        status: 'success',
       };
     } catch (error) {
       return {
@@ -239,10 +240,10 @@ class FavoritesService {
           totalPairings: 0,
           uniqueMeals: 0,
           uniquePlaylists: 0,
-          topCuisine: null
+          topCuisine: null,
         },
         error: error instanceof Error ? error.message : 'Failed to get stats',
-        status: 'error'
+        status: 'error',
       };
     }
   }

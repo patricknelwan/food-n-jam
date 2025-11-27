@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Colors, Typography } from 'react-native-ui-lib';
 import { AppButton } from './AppButton';
+import { Ionicons } from '@expo/vector-icons';
 
 interface EmptyStateProps {
   title: string;
@@ -9,24 +10,35 @@ interface EmptyStateProps {
   actionLabel?: string;
   onAction?: () => void;
   type?: 'search' | 'error' | 'empty' | 'loading';
+  icon?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   message,
   actionLabel,
+
   onAction,
   type = 'empty',
+  icon,
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.content} center>
         <View style={[styles.iconContainer, styles[`${type}Icon`]]}>
-          <Text style={styles.iconText}>{getIconText(type)}</Text>
+          {icon ? (
+            <Ionicons name={icon as any} size={32} color={Colors.white} />
+          ) : (
+            <Text style={styles.iconText}>{getIconText(type)}</Text>
+          )}
         </View>
-        <Text style={styles.title} center>{title}</Text>
-        <Text style={styles.message} center>{message}</Text>
-        
+        <Text style={styles.title} center>
+          {title}
+        </Text>
+        <Text style={styles.message} center>
+          {message}
+        </Text>
+
         {actionLabel && onAction && (
           <AppButton
             label={actionLabel}
@@ -42,11 +54,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
 const getIconText = (type: string) => {
   switch (type) {
-    case 'search': return 'SEARCH';
-    case 'error': return 'ERROR';
-    case 'empty': return 'EMPTY';
-    case 'loading': return 'LOADING';
-    default: return 'INFO';
+    case 'search':
+      return 'SEARCH';
+    case 'error':
+      return 'ERROR';
+    case 'empty':
+      return 'EMPTY';
+    case 'loading':
+      return 'LOADING';
+    default:
+      return 'INFO';
   }
 };
 

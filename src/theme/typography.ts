@@ -6,7 +6,7 @@ export const typography = {
     bold: 'System',
     light: 'System',
   },
-  
+
   // Font sizes
   fontSize: {
     xs: 12,
@@ -19,14 +19,14 @@ export const typography = {
     '4xl': 36,
     '5xl': 48,
   },
-  
+
   // Line heights
   lineHeight: {
     tight: 1.25,
     normal: 1.5,
     relaxed: 1.75,
   },
-  
+
   // Font weights
   fontWeight: {
     light: '300',
@@ -36,7 +36,7 @@ export const typography = {
     bold: '700',
     extrabold: '800',
   },
-  
+
   // Text styles (combinations)
   textStyles: {
     h1: {

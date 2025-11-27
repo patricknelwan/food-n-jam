@@ -25,7 +25,7 @@ module.exports = function (api) {
             '@screens': './src/screens',
             '@services': './src/services',
             '@utils': './src/utils',
-            '@types': './src/types',
+            '@app-types': './src/types',
             '@hooks': './src/hooks',
             '@data': './src/data',
             '@assets': './src/assets',
